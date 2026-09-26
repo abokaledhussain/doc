@@ -1,7 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>دستور بابل المالي | الطرق السبع للثراء</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>دستور بابل المالي | الطرق السبع للثراء</title>
+
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -39,20 +43,70 @@ body {
     font-family: "Cairo", "Segoe UI", sans-serif;
     line-height: 2;
     padding: 0;
+    overflow-x: hidden;
+    perspective: 2000px;
 }
 
-/* الكتاب */
+/* ============ شريط تقدم القراءة ============ */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(to left, var(--gold-dark), var(--gold), var(--gold-light));
+    z-index: 999;
+    box-shadow: 0 0 12px rgba(180,138,69,.7);
+    transition: width .1s linear;
+}
 
+/* ============ جزيئات عائمة ============ */
+.particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.particle {
+    position: absolute;
+    color: rgba(180,138,69,.28);
+    font-size: 14px;
+    animation: floatUp linear infinite;
+    will-change: transform, opacity;
+    user-select: none;
+}
+@keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg) scale(.7); opacity: 0; }
+    10%  { opacity: .55; }
+    90%  { opacity: .55; }
+    100% { transform: translateY(-10vh) rotate(360deg) scale(1); opacity: 0; }
+}
+
+/* ============ الكتاب ============ */
 .book {
     width: min(900px, 100%);
     margin: auto;
     background: var(--paper-light);
     min-height: 100vh;
     box-shadow: 0 0 45px rgba(60,45,25,.12);
+    position: relative;
+    z-index: 1;
+    transform-style: preserve-3d;
+    animation: bookEnter 1.4s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes bookEnter {
+    from {
+        opacity: 0;
+        transform: translateY(60px) rotateX(12deg) scale(.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0) scale(1);
+    }
 }
 
-/* الغلاف */
-
+/* ============ الغلاف ============ */
 .cover {
     min-height: 100vh;
     padding: 35px 25px;
@@ -66,8 +120,10 @@ body {
     background:
         radial-gradient(circle at center, rgba(180,138,69,.18), transparent 35%),
         linear-gradient(145deg, #182a23, #2d4639 55%, #182a23);
+    transform-style: preserve-3d;
 }
 
+/* هالة متحركة خلف الغلاف */
 .cover::before,
 .cover::after {
     content: "";
@@ -78,10 +134,44 @@ body {
 
 .cover::before {
     inset: 22px;
+    animation: cornerPulse 4s ease-in-out infinite;
 }
-
 .cover::after {
     inset: 32px;
+    animation: cornerPulse 4s ease-in-out infinite reverse;
+}
+@keyframes cornerPulse {
+    0%,100% { opacity: .45; transform: scale(1); }
+    50%     { opacity: .85; transform: scale(1.008); }
+}
+
+/* أضواء دوّارة داخل الغلاف */
+.cover .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: .35;
+}
+.cover .glow-1 {
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(216,189,130,.35), transparent 70%);
+    top: -80px; right: -80px;
+    animation: glowMove1 12s ease-in-out infinite;
+}
+.cover .glow-2 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(180,138,69,.35), transparent 70%);
+    bottom: -70px; left: -70px;
+    animation: glowMove2 14s ease-in-out infinite;
+}
+@keyframes glowMove1 {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50%     { transform: translate(-40px, 40px) scale(1.15); }
+}
+@keyframes glowMove2 {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50%     { transform: translate(50px, -30px) scale(1.2); }
 }
 
 .cover-inner {
@@ -92,8 +182,28 @@ body {
     padding: 55px 25px;
     border-top: 1px solid rgba(216,189,130,.45);
     border-bottom: 1px solid rgba(216,189,130,.45);
+    transform-style: preserve-3d;
 }
 
+/* دخول متسلسل لعناصر الغلاف */
+.cover-inner > * {
+    opacity: 0;
+    animation: fadeUp .9s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.cover-inner .cover-symbol      { animation-delay: .25s; }
+.cover-inner .cover-small       { animation-delay: .45s; }
+.cover-inner h1                 { animation-delay: .6s; }
+.cover-inner h2                 { animation-delay: .78s; }
+.cover-inner .cover-line:nth-of-type(1) { animation-delay: .95s; }
+.cover-inner .cover-description { animation-delay: 1.05s; }
+.cover-inner .cover-line:nth-of-type(2) { animation-delay: 1.2s; }
+.cover-inner .cover-author      { animation-delay: 1.3s; }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* رمز الغلاف مع دوران طفيف و وميض */
 .cover-symbol {
     width: 95px;
     height: 95px;
@@ -107,6 +217,14 @@ body {
     box-shadow:
         0 0 0 8px rgba(180,138,69,.08),
         0 0 35px rgba(180,138,69,.15);
+    animation:
+        fadeUp .9s cubic-bezier(.2,.8,.2,1) .25s forwards,
+        symbolFloat 5s ease-in-out 1.2s infinite;
+    transform-style: preserve-3d;
+}
+@keyframes symbolFloat {
+    0%,100% { transform: translateY(0) rotateY(0deg); box-shadow: 0 0 0 8px rgba(180,138,69,.08), 0 0 35px rgba(180,138,69,.15); }
+    50%     { transform: translateY(-10px) rotateY(180deg); box-shadow: 0 0 0 12px rgba(180,138,69,.14), 0 0 55px rgba(180,138,69,.32); }
 }
 
 .cover-small {
@@ -124,6 +242,14 @@ body {
     font-weight: 700;
     color: #fff3d5;
     margin-bottom: 15px;
+    text-shadow: 0 4px 30px rgba(0,0,0,.4);
+    animation:
+        fadeUp .9s cubic-bezier(.2,.8,.2,1) .6s forwards,
+        titleGlow 4s ease-in-out 1.5s infinite;
+}
+@keyframes titleGlow {
+    0%,100% { text-shadow: 0 4px 30px rgba(0,0,0,.4), 0 0 20px rgba(216,189,130,0); }
+    50%     { text-shadow: 0 4px 30px rgba(0,0,0,.4), 0 0 30px rgba(216,189,130,.35); }
 }
 
 .cover h2 {
@@ -147,21 +273,78 @@ body {
     height: 2px;
     background: var(--gold);
     margin: 30px auto;
+    position: relative;
+    overflow: hidden;
+}
+.cover-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, #fff3d5, transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .cover-author {
     color: #cdbb99;
     font-size: 13px;
+    line-height: 2;
+}
+.cover-author strong {
+    color: var(--gold-light);
+    font-family: "Amiri", serif;
+    font-size: 16px;
+    letter-spacing: .5px;
+    display: inline-block;
+    margin-top: 6px;
 }
 
-/* المحتوى */
-
+/* ============ المحتوى ============ */
 .content {
     padding: 45px clamp(20px, 6vw, 65px) 60px;
+    position: relative;
+    z-index: 1;
 }
 
-/* بداية الكتاب */
+/* ============ أنيميشن ظهور عام عند التمرير ============ */
+.reveal {
+    opacity: 0;
+    transform: translateY(45px);
+    transition:
+        opacity .9s cubic-bezier(.2,.8,.2,1),
+        transform .9s cubic-bezier(.2,.8,.2,1);
+    will-change: opacity, transform;
+}
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity .9s ease, transform .9s ease;
+}
+.reveal-left.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(.85);
+    transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
+}
+.reveal-scale.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ============ المقدمة ============ */
 .preface {
     text-align: center;
     padding: 25px 0 50px;
@@ -191,8 +374,7 @@ body {
     margin: auto;
 }
 
-/* زخرفة */
-
+/* ============ زخرفة ============ */
 .ornament {
     display: flex;
     align-items: center;
@@ -200,7 +382,6 @@ body {
     margin: 35px 0;
     color: var(--gold);
 }
-
 .ornament::before,
 .ornament::after {
     content: "";
@@ -208,13 +389,17 @@ body {
     background: var(--line);
     flex: 1;
 }
-
 .ornament span {
     font-size: 20px;
+    animation: rotateStar 8s linear infinite;
+    display: inline-block;
+}
+@keyframes rotateStar {
+    from { transform: rotate(0); }
+    to   { transform: rotate(360deg); }
 }
 
-/* بطاقة المبدأ */
-
+/* ============ بطاقة المبدأ ============ */
 .principle {
     background: linear-gradient(135deg, #f5ecdc, #fbf7ee);
     border: 1px solid var(--line);
@@ -223,26 +408,30 @@ body {
     padding: 24px 25px;
     margin-bottom: 45px;
     position: relative;
+    transition: transform .4s ease, box-shadow .4s ease;
+    transform-style: preserve-3d;
 }
-
+.principle:hover {
+    transform: translateY(-5px) rotateX(2deg);
+    box-shadow: 0 18px 40px -20px rgba(140,105,46,.5);
+}
 .principle-title {
     color: var(--green);
     font-weight: 800;
     font-size: 17px;
     margin-bottom: 8px;
 }
-
 .principle p {
     color: var(--muted);
     font-family: "Amiri", serif;
     font-size: 18px;
 }
 
-/* الطريقة */
-
+/* ============ الطريقة ============ */
 .rule {
     margin-bottom: 70px;
     scroll-margin-top: 20px;
+    position: relative;
 }
 
 .rule-heading {
@@ -250,12 +439,13 @@ body {
     margin-bottom: 35px;
 }
 
+/* رقم الطريقة بتأثير ثلاثي الأبعاد */
 .rule-number {
     width: 62px;
     height: 62px;
     margin: 0 auto 15px;
     border-radius: 50%;
-    background: var(--green);
+    background: linear-gradient(135deg, var(--green), var(--green-light));
     color: var(--gold-light);
     display: flex;
     align-items: center;
@@ -263,7 +453,19 @@ body {
     font-family: "Amiri", serif;
     font-size: 29px;
     border: 3px double var(--gold);
-    box-shadow: 0 5px 15px var(--shadow);
+    box-shadow:
+        0 5px 15px var(--shadow),
+        0 0 0 6px rgba(180,138,69,.08);
+    transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
+    transform-style: preserve-3d;
+    animation: numPulse 3s ease-in-out infinite;
+}
+@keyframes numPulse {
+    0%,100% { box-shadow: 0 5px 15px var(--shadow), 0 0 0 6px rgba(180,138,69,.08); }
+    50%     { box-shadow: 0 10px 28px var(--shadow), 0 0 0 12px rgba(180,138,69,.16); }
+}
+.rule-number:hover {
+    transform: rotateY(360deg) scale(1.1);
 }
 
 .rule-heading small {
@@ -271,16 +473,19 @@ body {
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 1px;
+    display: block;
 }
-
 .rule-heading h2 {
     color: var(--green);
     font-family: "Amiri", serif;
     font-size: clamp(26px, 5vw, 35px);
     line-height: 1.5;
     margin-top: 5px;
+    transition: letter-spacing .5s ease;
 }
-
+.rule:hover .rule-heading h2 {
+    letter-spacing: .5px;
+}
 .rule-heading p {
     color: var(--muted);
     font-size: 14px;
@@ -288,8 +493,7 @@ body {
     margin: 8px auto 0;
 }
 
-/* نص الطريقة */
-
+/* ============ نص الطريقة ============ */
 .rule-intro {
     font-family: "Amiri", serif;
     font-size: 20px;
@@ -305,10 +509,15 @@ body {
     padding-left: 8px;
     color: var(--gold-dark);
     font-weight: bold;
+    transition: color .4s ease, transform .4s ease;
+    display: inline-block;
+}
+.rule-intro:hover .dropcap::first-letter {
+    color: var(--gold);
+    transform: scale(1.1);
 }
 
-/* صندوق الفكرة */
-
+/* ============ صندوق الفكرة 3D ============ */
 .info-box {
     display: grid;
     grid-template-columns: 58px 1fr;
@@ -319,17 +528,51 @@ body {
     padding: 20px;
     margin: 18px 0;
     box-shadow: 0 4px 15px rgba(70,50,25,.05);
+    position: relative;
+    transform-style: preserve-3d;
+    transition:
+        transform .45s cubic-bezier(.2,.8,.2,1),
+        box-shadow .45s ease,
+        border-color .45s ease;
+    will-change: transform;
+    overflow: hidden;
+}
+/* لمعة عابرة عند المرور */
+.info-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(216,189,130,.35), transparent);
+    transition: left .9s ease;
+    pointer-events: none;
+}
+.info-box:hover::before {
+    left: 130%;
+}
+.info-box:hover {
+    transform: translateY(-6px) rotateX(3deg) rotateY(-2deg);
+    box-shadow:
+        0 22px 45px -22px rgba(140,105,46,.55),
+        0 0 0 1px rgba(180,138,69,.25);
+    border-color: var(--gold-light);
 }
 
 .info-icon {
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    background: #f1e5d0;
+    background: linear-gradient(135deg, #f5ead2, #eadcbc);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 27px;
+    transition: transform .5s cubic-bezier(.2,.8,.2,1);
+    transform-style: preserve-3d;
+}
+.info-box:hover .info-icon {
+    transform: rotateY(360deg) scale(1.12);
 }
 
 .info-box h3 {
@@ -337,7 +580,6 @@ body {
     font-size: 16px;
     margin-bottom: 5px;
 }
-
 .info-box p {
     color: var(--muted);
     font-family: "Amiri", serif;
@@ -345,19 +587,22 @@ body {
     line-height: 1.95;
 }
 
-/* اقتباس */
-
+/* ============ اقتباس ============ */
 .quote {
     position: relative;
     margin: 30px 0;
     padding: 30px 35px;
     text-align: center;
-    background: var(--green);
+    background: linear-gradient(135deg, #263c32, #314e40);
     color: #efe2c5;
     border-radius: 8px;
     overflow: hidden;
+    transition: transform .5s ease, box-shadow .5s ease;
 }
-
+.quote:hover {
+    transform: scale(1.015);
+    box-shadow: 0 25px 50px -25px rgba(38,60,50,.7);
+}
 .quote::before {
     content: "“";
     position: absolute;
@@ -366,8 +611,12 @@ body {
     font-family: Georgia, serif;
     font-size: 100px;
     color: rgba(216,189,130,.14);
+    animation: quoteFloat 6s ease-in-out infinite;
 }
-
+@keyframes quoteFloat {
+    0%,100% { transform: translateY(0) rotate(0); }
+    50%     { transform: translateY(-10px) rotate(-5deg); }
+}
 .quote p {
     font-family: "Amiri", serif;
     font-size: 21px;
@@ -375,7 +624,6 @@ body {
     position: relative;
     z-index: 1;
 }
-
 .quote small {
     display: block;
     color: var(--gold-light);
@@ -383,106 +631,152 @@ body {
     font-size: 12px;
 }
 
-/* التطبيق */
-
+/* ============ التطبيق ============ */
 .action {
     background: #f6efe2;
     border: 1px dashed var(--gold);
     border-radius: 8px;
     padding: 20px 22px;
     margin-top: 25px;
+    transition: transform .4s ease, background .4s ease, border-style .4s ease;
 }
-
+.action:hover {
+    transform: translateY(-4px);
+    background: #f9f3e8;
+    border-style: solid;
+}
 .action-title {
     color: var(--gold-dark);
     font-weight: 800;
     margin-bottom: 7px;
 }
-
 .action p {
     font-family: "Amiri", serif;
     color: var(--ink);
     font-size: 17px;
 }
 
-/* مثال رقمي */
-
+/* ============ مثال رقمي ============ */
 .example {
-    background: #263c32;
+    background: linear-gradient(135deg, #263c32, #2f4a3d);
     color: #f2e7ce;
     padding: 23px;
     border-radius: 9px;
     margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .5s ease, box-shadow .5s ease;
 }
-
+.example::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(216,189,130,.12), transparent 45%);
+    animation: exampleGlow 8s linear infinite;
+    pointer-events: none;
+}
+@keyframes exampleGlow {
+    from { transform: rotate(0); }
+    to   { transform: rotate(360deg); }
+}
+.example:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 22px 45px -22px rgba(38,60,50,.8);
+}
 .example-title {
     color: var(--gold-light);
     font-weight: 800;
     margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
 }
-
 .example p {
     font-family: "Amiri", serif;
     font-size: 17px;
     line-height: 2;
+    position: relative;
+    z-index: 1;
 }
-
 .example strong {
     color: #fff1cb;
+    transition: color .3s ease;
+}
+.example:hover strong {
+    color: #ffe9ad;
 }
 
-/* فاصل الطرق */
-
+/* ============ فاصل الطرق ============ */
 .section-divider {
     display: flex;
     align-items: center;
     gap: 15px;
     margin: 65px 0;
 }
-
 .section-divider::before,
 .section-divider::after {
     content: "";
     height: 1px;
-    background: var(--line);
+    background: linear-gradient(to left, transparent, var(--line), transparent);
     flex: 1;
 }
-
 .section-divider span {
     color: var(--gold);
     font-size: 22px;
+    animation: dividerSpin 10s linear infinite;
+    display: inline-block;
+}
+@keyframes dividerSpin {
+    from { transform: rotate(0); }
+    to   { transform: rotate(360deg); }
 }
 
-/* ملخص */
-
+/* ============ ملخص ============ */
 .summary {
     background: linear-gradient(135deg, #263c32, #314e40);
     color: #eee4cf;
     border-radius: 12px;
     padding: 35px 25px;
     margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px -25px rgba(38,60,50,.75);
 }
-
+.summary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(216,189,130,.08), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(216,189,130,.06), transparent 40%);
+    pointer-events: none;
+}
 .summary h2 {
     font-family: "Amiri", serif;
     color: var(--gold-light);
     text-align: center;
     font-size: 29px;
     margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
 }
-
 .summary-item {
     display: flex;
     align-items: center;
     gap: 13px;
     padding: 11px 0;
     border-bottom: 1px solid rgba(216,189,130,.15);
+    position: relative;
+    z-index: 1;
+    transition: transform .35s ease, padding .35s ease;
 }
-
+.summary-item:hover {
+    transform: translateX(-8px);
+    padding-right: 6px;
+}
 .summary-item:last-child {
     border-bottom: 0;
 }
-
 .summary-number {
     width: 32px;
     height: 32px;
@@ -494,32 +788,39 @@ body {
     color: var(--gold-light);
     flex-shrink: 0;
     font-size: 13px;
+    transition: background .35s ease, color .35s ease, transform .35s ease;
 }
-
+.summary-item:hover .summary-number {
+    background: var(--gold);
+    color: var(--green);
+    transform: scale(1.15) rotate(360deg);
+}
 .summary-item span:last-child {
     font-family: "Amiri", serif;
     font-size: 17px;
 }
 
-/* الخاتمة */
-
+/* ============ الخاتمة ============ */
 .ending {
     text-align: center;
     padding: 70px 10px 30px;
 }
-
 .ending-symbol {
     font-size: 38px;
     margin-bottom: 15px;
+    display: inline-block;
+    animation: leafFloat 4s ease-in-out infinite;
 }
-
+@keyframes leafFloat {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%     { transform: translateY(-12px) rotate(5deg); }
+}
 .ending h2 {
     font-family: "Amiri", serif;
     color: var(--green);
     font-size: 32px;
     margin-bottom: 15px;
 }
-
 .ending p {
     font-family: "Amiri", serif;
     color: var(--muted);
@@ -529,8 +830,7 @@ body {
     margin: auto;
 }
 
-/* الفوتر */
-
+/* ============ الفوتر ============ */
 .footer {
     text-align: center;
     padding: 30px 20px 40px;
@@ -538,1035 +838,907 @@ body {
     color: var(--muted);
     font-size: 12px;
 }
-
 .footer .gold {
     color: var(--gold-dark);
     font-weight: bold;
 }
 
-/* زر العودة */
-
+/* ============ زر العودة ============ */
 .back-top {
     position: fixed;
     bottom: 18px;
     left: 18px;
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: var(--green);
+    background: linear-gradient(135deg, var(--green), var(--green-light));
     color: var(--gold-light);
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    box-shadow: 0 5px 18px rgba(0,0,0,.2);
+    box-shadow: 0 8px 22px rgba(0,0,0,.25);
     z-index: 20;
     font-size: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(.85);
+    transition: opacity .4s ease, transform .4s ease, visibility .4s;
+}
+.back-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+.back-top:hover {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
 }
 
-/* الموبايل */
-
+/* ============ الموبايل ============ */
 @media (max-width: 600px) {
+    body { background: var(--paper); }
+    .book { box-shadow: none; }
+    .cover { min-height: 100svh; padding: 20px 15px; }
+    .cover::before { inset: 14px; }
+    .cover::after  { inset: 21px; }
+    .cover-inner { padding: 45px 20px; }
+    .cover-symbol { width: 78px; height: 78px; font-size: 38px; margin-bottom: 22px; }
+    .cover h1 { font-size: 39px; }
+    .cover h2 { font-size: 19px; }
+    .cover-description { font-size: 17px; }
+    .content { padding: 35px 17px 50px; }
+    .preface h2 { font-size: 29px; }
+    .preface p { font-size: 18px; }
+    .rule { margin-bottom: 55px; }
+    .rule-heading h2 { font-size: 27px; }
+    .rule-intro { font-size: 19px; text-align: right; }
+    .info-box { grid-template-columns: 45px 1fr; gap: 12px; padding: 17px; }
+    .info-icon { width: 43px; height: 43px; font-size: 22px; }
+    .info-box p { font-size: 16px; }
+    .quote { padding: 25px 20px; }
+    .quote p { font-size: 19px; }
+    .example, .action { padding: 18px; }
+    .particles { display: none; }
+}
 
-    body {
-        background: var(--paper);
+/* ============ احترام إعدادات تقليل الحركة ============ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
     }
-
-    .book {
-        box-shadow: none;
-    }
-
-    .cover {
-        min-height: 100svh;
-        padding: 20px 15px;
-    }
-
-    .cover::before {
-        inset: 14px;
-    }
-
-    .cover::after {
-        inset: 21px;
-    }
-
-    .cover-inner {
-        padding: 45px 20px;
-    }
-
-    .cover-symbol {
-        width: 78px;
-        height: 78px;
-        font-size: 38px;
-        margin-bottom: 22px;
-    }
-
-    .cover h1 {
-        font-size: 39px;
-    }
-
-    .cover h2 {
-        font-size: 19px;
-    }
-
-    .cover-description {
-        font-size: 17px;
-    }
-
-    .content {
-        padding: 35px 17px 50px;
-    }
-
-    .preface h2 {
-        font-size: 29px;
-    }
-
-    .preface p {
-        font-size: 18px;
-    }
-
-    .rule {
-        margin-bottom: 55px;
-    }
-
-    .rule-heading h2 {
-        font-size: 27px;
-    }
-
-    .rule-intro {
-        font-size: 19px;
-        text-align: right;
-    }
-
-    .info-box {
-        grid-template-columns: 45px 1fr;
-        gap: 12px;
-        padding: 17px;
-    }
-
-    .info-icon {
-        width: 43px;
-        height: 43px;
-        font-size: 22px;
-    }
-
-    .info-box p {
-        font-size: 16px;
-    }
-
-    .quote {
-        padding: 25px 20px;
-    }
-
-    .quote p {
-        font-size: 19px;
-    }
-
-    .example,
-    .action {
-        padding: 18px;
+    .reveal, .reveal-left, .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
 
-/* الطباعة */
-
+/* ============ الطباعة ============ */
 @media print {
-
-    body {
-        background: white;
-    }
-
-    .book {
-        width: 100%;
-        box-shadow: none;
-    }
-
+    body { background: white; perspective: none; }
+    .book { width: 100%; box-shadow: none; animation: none; transform: none; }
     .cover {
         min-height: 100vh;
         page-break-after: always;
+        animation: none;
     }
-
-    .back-top {
-        display: none;
+    .cover-inner > * { opacity: 1 !important; animation: none !important; transform: none !important; }
+    .cover-symbol { animation: none !important; }
+    .cover h1 { animation: none !important; text-shadow: none; }
+    .cover-line::after { display: none; }
+    .back-top, .scroll-progress, .particles { display: none !important; }
+    .rule { page-break-inside: avoid; }
+    .info-box, .quote, .example, .action, .principle { break-inside: avoid; }
+    .reveal, .reveal-left, .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
     }
-
-    .rule {
-        page-break-inside: avoid;
-    }
-
-    .info-box,
-    .quote,
-    .example,
-    .action {
-        break-inside: avoid;
-    }
+    .ornament span, .section-divider span, .ending-symbol { animation: none !important; }
 }
-</style></head><body><div class="book"><!-- الغلاف -->
+</style>
+</head>
+<body>
 
-<section class="cover" id="top">
-    <div class="cover-inner">
+<!-- شريط التقدم -->
+<div class="scroll-progress" id="progressBar" aria-hidden="true"></div>
 
-        <div class="cover-symbol">🏺</div>
+<!-- طبقة الجزيئات العائمة -->
+<div class="particles" id="particles" aria-hidden="true"></div>
 
-        <div class="cover-small">
-            كتاب في الحكمة المالية
+<div class="book">
+
+    <!-- الغلاف -->
+    <section class="cover" id="top">
+        <div class="glow glow-1" aria-hidden="true"></div>
+        <div class="glow glow-2" aria-hidden="true"></div>
+
+        <div class="cover-inner">
+
+            <div class="cover-symbol">🏺</div>
+
+            <div class="cover-small">
+                كتاب في الحكمة المالية
+            </div>
+
+            <h1>دستور بابل المالي</h1>
+
+            <h2>الطرق السبع للتغلب على المحافظ الخاوية</h2>
+
+            <div class="cover-line"></div>
+
+            <p class="cover-description">
+                رحلة قصيرة في المبادئ التي تساعد الإنسان على تنظيم ماله،
+                وبناء ثروته، وحماية ما يملك، وزيادة قدرته على الكسب.
+            </p>
+
+            <div class="cover-line"></div>
+
+            <div class="cover-author">
+                ملخص مستوحى من كتاب «أغنى رجل في بابل»
+                <br>
+                <strong>إعداد وترتيب: حسين العرياني</strong>
+            </div>
+
+        </div>
+    </section>
+
+
+    <main class="content">
+
+        <!-- المقدمة -->
+        <section class="preface reveal">
+
+            <div class="chapter-label">تمهيد</div>
+
+            <h2>حكاية قديمة عن مشكلة لا تزال حديثة</h2>
+
+            <p>
+                منذ آلاف السنين كان أهل بابل يتعاملون مع المال كما نتعامل معه اليوم:
+                بعضهم يجمعه، وبعضهم ينفقه بسرعة، وبعضهم يحاول تنميته،
+                وقلة فقط تعرف كيف تجعل المال يعمل لصالحها.
+            </p>
+
+            <div class="ornament"><span>✦</span></div>
+
+            <p>
+                الفكرة الأساسية في هذا الكتاب بسيطة:
+                <strong>الثروة لا تبدأ بحجم الدخل، بل بالطريقة التي يتعامل بها الإنسان مع ما يدخل إلى يده.</strong>
+            </p>
+
+        </section>
+
+
+        <div class="principle reveal-scale">
+
+            <div class="principle-title">
+                🏛️ المبدأ الذي يجمع الطرق السبع
+            </div>
+
+            <p>
+                لا تحاول أن تصبح ثرياً في ليلة واحدة.
+                ابدأ ببناء عادة مالية صحيحة، ثم كررها باستمرار.
+                المال الصغير الذي يُدار بحكمة يمكن أن يصبح أساساً لثروة كبيرة مع مرور السنوات.
+            </p>
+
         </div>
 
-        <h1>
-            دستور بابل المالي
-        </h1>
 
-        <h2>
-            الطرق السبع للتغلب على المحافظ الخاوية
-        </h2>
+        <!-- الطريقة الأولى -->
+        <section class="rule reveal" id="rule1">
 
-        <div class="cover-line"></div>
+            <div class="rule-heading">
+                <div class="rule-number">١</div>
+                <small>الطريقة الأولى</small>
+                <h2>ابدأ في ملء محفظتك</h2>
+                <p>ادخر جزءاً من كل دخل قبل أن تبدأ في الإنفاق.</p>
+            </div>
 
-        <p class="cover-description">
-            رحلة قصيرة في المبادئ التي تساعد الإنسان على تنظيم ماله،
-            وبناء ثروته، وحماية ما يملك، وزيادة قدرته على الكسب.
-        </p>
+            <p class="rule-intro dropcap">
+                أول خطوة نحو بناء الثروة ليست العثور على استثمار خارق،
+                ولا اكتشاف سر غامض يعرفه الأثرياء وحدهم.
+                البداية أبسط من ذلك بكثير:
+                <strong>احتفظ بجزء من المال الذي تكسبه.</strong>
+                اجعل لنفسك نصيباً ثابتاً من كل دخل يصل إليك،
+                ولا تسمح للمصاريف بأن تلتهمه بالكامل.
+            </p>
 
-        <div class="cover-line"></div>
+            <div class="info-box reveal-left">
+                <div class="info-icon">🪙</div>
+                <div>
+                    <h3>القاعدة الذهبية</h3>
+                    <p>
+                        إذا دخل إلى يدك 10 ريالات، تعامل مع 9 ريالات على أنها دخلك الحقيقي،
+                        واجعل الريال العاشر ملكاً لثروتك المستقبلية.
+                    </p>
+                </div>
+            </div>
 
-<div class="cover-author">
-    ملخص مستوحى من كتاب «أغنى رجل في بابل»
-    <br>
-    <strong>إعداد وترتيب: حسين العرياني</strong>
+            <div class="info-box reveal-left">
+                <div class="info-icon">💰</div>
+                <div>
+                    <h3>لماذا 10٪؟</h3>
+                    <p>
+                        لأن النسبة قابلة للتطبيق على أغلب الدخول إذا تم ضبط النفقات.
+                        والمقصود ليس الرقم نفسه بقدر ما هو بناء عادة:
+                        <strong>ادخر أولاً ثم أنفق.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>لا تجعل كل ما تكسبه يمر من بين يديك دون أن يترك شيئاً لك.</p>
+                <small>مبدأ الادخار</small>
+            </div>
+
+            <div class="action reveal">
+                <div class="action-title">🎯 التطبيق العملي</div>
+                <p>
+                    عند نزول راتبك، افصل مبلغ الادخار مباشرة في حساب مستقل.
+                    لا تنتظر نهاية الشهر لترى ما تبقى، لأن البشر اكتشفوا منذ زمن طويل
+                    أن «ما تبقى» غالباً يساوي صفراً بطريقة سحرية جداً.
+                </p>
+            </div>
+
+            <div class="example reveal">
+                <div class="example-title">📌 مثال بسيط</div>
+                <p>
+                    راتبك الشهري <strong>10,000 ريال</strong>.
+                    ادخر 10٪ = <strong>1,000 ريال شهرياً</strong>.
+                    خلال سنة يصبح لديك <strong>12,000 ريال</strong>
+                    قبل احتساب أي عوائد استثمارية.
+                </p>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة الثانية -->
+        <section class="rule reveal" id="rule2">
+
+            <div class="rule-heading">
+                <div class="rule-number">٢</div>
+                <small>الطريقة الثانية</small>
+                <h2>تحكم في نفقاتك</h2>
+                <p>فرّق بين ما تحتاجه وما ترغب فيه.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                الادخار وحده لا يكفي إذا كانت النفقات تتوسع مع كل زيادة في الدخل.
+                كثير من الناس عندما يرتفع دخلهم لا يشعرون بأنهم أصبحوا أغنى،
+                لأن مستوى إنفاقهم يرتفع معه مباشرة.
+                لذلك تحتاج إلى ميزانية واضحة تحدد أين يذهب المال قبل أن يختفي.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">⚖️</div>
+                <div>
+                    <h3>الاحتياجات ليست الرغبات</h3>
+                    <p>
+                        الطعام والسكن والمواصلات الأساسية تختلف عن شراء الأشياء
+                        لمجرد أنك تريدها الآن. الرغبة ليست مشكلة بحد ذاتها،
+                        لكن المشكلة عندما تعامل كل رغبة وكأنها ضرورة لا يمكن تأجيلها.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">📝</div>
+                <div>
+                    <h3>اكتب مصروفاتك</h3>
+                    <p>
+                        سجل مصاريفك الشهرية، ثم صنفها إلى:
+                        ضرورية، مهمة، ترفيهية، ويمكن الاستغناء عنها.
+                        مجرد رؤية الأرقام مكتوبة قد تكون أكثر إقناعاً من مئة نصيحة مالية.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>
+                    الرغبات كثيرة، أما الدخل فله حدود.
+                    الحكمة هي أن تجعل نفقاتك تخدم أهدافك، لا أن تجعل أهدافك تخدم نفقاتك.
+                </p>
+                <small>إدارة النفقات</small>
+            </div>
+
+            <div class="action reveal">
+                <div class="action-title">🎯 التطبيق العملي</div>
+                <p>
+                    ضع سقفاً لكل نوع من المصاريف.
+                    وعندما تنتهي ميزانية الترفيه مثلاً، لا تسحب من مبلغ الادخار لتعويضها.
+                    بهذه الطريقة يصبح الادخار جزءاً محمياً من نظامك المالي.
+                </p>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة الثالثة -->
+        <section class="rule reveal" id="rule3">
+
+            <div class="rule-heading">
+                <div class="rule-number">٣</div>
+                <small>الطريقة الثالثة</small>
+                <h2>أنمِ ثروتك</h2>
+                <p>اجعل مدخراتك تنتج دخلاً بدلاً من بقائها خاملة.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                بعد أن تبدأ في الادخار، تظهر الخطوة التالية:
+                ماذا ستفعل بهذا المال؟
+                المال الذي يجلس بلا هدف قد يحافظ على قيمته الاسمية،
+                لكنه لا يعمل من أجلك.
+                أما المال المستثمر بعقلانية فيمكن أن يولد عوائد،
+                وهذه العوائد يمكن أن تُعاد استثمارها لتبدأ دائرة النمو.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">📈</div>
+                <div>
+                    <h3>اجعل المال يعمل</h3>
+                    <p>
+                        ابحث عن الاستثمارات التي تفهمها وتتناسب مع قدرتك على تحمل المخاطر.
+                        الهدف ليس مطاردة أعلى ربح ممكن، بل بناء مصدر نمو مستمر ومدروس.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🌱</div>
+                <div>
+                    <h3>قوة التراكم</h3>
+                    <p>
+                        عندما تحقق استثماراً عائداً، ثم تعيد استثمار العائد،
+                        يصبح لديك أصل يولد عائداً، والعائد نفسه يبدأ في توليد عوائد إضافية.
+                        هذه الفكرة هي جوهر النمو المركب عبر الزمن.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>اجعل كل ريال تدخره يبحث لك عن ريال آخر.</p>
+                <small>قوة الاستثمار والتراكم</small>
+            </div>
+
+            <div class="action reveal">
+                <div class="action-title">🎯 التطبيق العملي</div>
+                <p>
+                    حدد هدفاً استثمارياً طويل الأجل، واختر أدوات استثمارية تفهم طبيعتها
+                    ومخاطرها، ثم اجعل الإضافة المنتظمة عادة.
+                    الاستمرارية أهم من محاولة معرفة أفضل يوم للشراء وأفضل يوم للبيع.
+                </p>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة الرابعة -->
+        <section class="rule reveal" id="rule4">
+
+            <div class="rule-heading">
+                <div class="rule-number">٤</div>
+                <small>الطريقة الرابعة</small>
+                <h2>حافظ على ثروتك من الضياع</h2>
+                <p>حماية رأس المال تسبق البحث عن الربح.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                جمع المال يحتاج إلى سنوات، لكن خسارته قد تحتاج إلى قرار واحد فقط.
+                لذلك لا يكفي أن تعرف كيف تستثمر، بل يجب أن تعرف كيف تحمي نفسك
+                من الاستثمارات التي لا تفهمها، والوعود المبالغ فيها،
+                والمخاطر التي لا تستطيع تحملها.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🛡️</div>
+                <div>
+                    <h3>افهم قبل أن تستثمر</h3>
+                    <p>
+                        إذا لم تستطع شرح الاستثمار لشخص آخر بطريقة بسيطة،
+                        فهذه إشارة تستحق التوقف عندها ودراسة الموضوع أكثر.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">⚠️</div>
+                <div>
+                    <h3>احذر الثراء السريع</h3>
+                    <p>
+                        الوعود بعوائد ضخمة ومضمونة خلال وقت قصير تستحق الحذر الشديد.
+                        لا يوجد استثمار مرتفع العائد بلا مخاطر لمجرد أن أحدهم وضع له
+                        صورة فاخرة وشعاراً ذهبياً.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🧠</div>
+                <div>
+                    <h3>استشر أصحاب الخبرة</h3>
+                    <p>
+                        اطلب رأي المختصين عندما تكون القرارات كبيرة أو معقدة،
+                        وقارن المعلومات ولا تعتمد على نصيحة شخص واحد فقط.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>لا تجعل الرغبة في الربح سبباً لخسارة ما جمعته بصعوبة.</p>
+                <small>حماية رأس المال</small>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة الخامسة -->
+        <section class="rule reveal" id="rule5">
+
+            <div class="rule-heading">
+                <div class="rule-number">٥</div>
+                <small>الطريقة الخامسة</small>
+                <h2>اجعل منزلك استثماراً مريحاً</h2>
+                <p>فكر في السكن من زاوية مالية وعائلية معاً.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                ينظر الكتاب إلى امتلاك المسكن باعتباره وسيلة لتحقيق الاستقرار
+                وتقليل بعض تكاليف السكن على المدى الطويل.
+                لكن القرار العقاري ليس قاعدة تصلح للجميع،
+                فهو يعتمد على السعر والدخل والتمويل والموقع واحتياجات الأسرة.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🏠</div>
+                <div>
+                    <h3>الاستقرار</h3>
+                    <p>
+                        امتلاك منزل مناسب قد يمنح الأسرة شعوراً بالاستقرار
+                        ويجعل التخطيط للمستقبل أكثر وضوحاً.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">📊</div>
+                <div>
+                    <h3>احسب قبل القرار</h3>
+                    <p>
+                        لا تنظر إلى القسط وحده.
+                        احسب الدفعة الأولى، تكلفة التمويل، الصيانة، الرسوم،
+                        التأمين، والمصاريف المرتبطة بالعقار قبل اتخاذ القرار.
+                    </p>
+                </div>
+            </div>
+
+            <div class="action reveal">
+                <div class="action-title">🎯 التطبيق العملي</div>
+                <p>
+                    قارن بين تكلفة الإيجار وتكلفة التملك على المدى الطويل،
+                    ولا تجعل الرغبة في امتلاك منزل أكبر من قدرتك المالية.
+                    البيت الجميل يصبح عبئاً إذا كان يبتلع ميزانيتك.
+                </p>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة السادسة -->
+        <section class="rule reveal" id="rule6">
+
+            <div class="rule-heading">
+                <div class="rule-number">٦</div>
+                <small>الطريقة السادسة</small>
+                <h2>اضمن دخلاً للمستقبل</h2>
+                <p>لا تجعل مستقبلك المالي يعتمد على قدرتك على العمل إلى الأبد.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                الإنسان يعمل ويكسب خلال سنوات طويلة، لكن الظروف تتغير.
+                قد يتغير العمل أو تقل القدرة على الكسب أو تظهر مسؤوليات جديدة.
+                لذلك فإن التخطيط المالي للمستقبل ليس ترفاً،
+                بل وسيلة لتقليل المفاجآت عندما تتغير ظروف الحياة.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">⏳</div>
+                <div>
+                    <h3>ابدأ مبكراً</h3>
+                    <p>
+                        الوقت من أقوى عناصر الاستثمار طويل الأجل.
+                        المبلغ الصغير المنتظم يمكن أن يتراكم عبر سنوات طويلة،
+                        بينما تأجيل الادخار يجعل تحقيق الهدف أكثر صعوبة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">☂️</div>
+                <div>
+                    <h3>ابنِ شبكة أمان</h3>
+                    <p>
+                        وجود احتياطي مالي للطوارئ يقلل الحاجة إلى بيع الاستثمارات
+                        أو الاقتراض عند حدوث ظرف غير متوقع.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🏛️</div>
+                <div>
+                    <h3>فكر في المستقبل</h3>
+                    <p>
+                        ضع أهدافاً للسنوات القادمة، مثل التقاعد،
+                        تعليم الأبناء، شراء منزل، أو بناء مصدر دخل إضافي.
+                        ثم حوّل هذه الأهداف إلى مبالغ ومدة زمنية واضحة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>أفضل وقت للاستعداد للمستقبل هو قبل أن يصبح المستقبل حاضراً.</p>
+                <small>التخطيط طويل الأجل</small>
+            </div>
+
+        </section>
+
+
+        <div class="section-divider reveal"><span>◆</span></div>
+
+
+        <!-- الطريقة السابعة -->
+        <section class="rule reveal" id="rule7">
+
+            <div class="rule-heading">
+                <div class="rule-number">٧</div>
+                <small>الطريقة السابعة</small>
+                <h2>زد قدرتك على الكسب</h2>
+                <p>الاستثمار في نفسك قد يكون من أكثر الاستثمارات تأثيراً على دخلك.</p>
+            </div>
+
+            <p class="rule-intro dropcap">
+                لا يكفي أن تحاول تقليل المصاريف إلى الأبد.
+                هناك جانب آخر من المعادلة:
+                <strong>زيادة قدرتك على إنتاج الدخل.</strong>
+                تعلم مهارة جديدة، طور خبرتك، حسّن جودة عملك،
+                وابحث عن طرق تجعل قيمتك المهنية أكبر.
+            </p>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🎓</div>
+                <div>
+                    <h3>طوّر معرفتك</h3>
+                    <p>
+                        كل مهارة جديدة يمكن أن تفتح لك فرصة جديدة.
+                        تعلم باستمرار في المجال الذي تعمل فيه،
+                        ولا تجعل خبرتك تتوقف عند ما تعلمته قبل سنوات.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🎯</div>
+                <div>
+                    <h3>اجعل أهدافك محددة</h3>
+                    <p>
+                        بدلاً من قول «أريد أن أصبح غنياً»،
+                        حدد هدفاً قابلاً للقياس:
+                        ادخار مبلغ معين، زيادة الدخل بنسبة معينة،
+                        أو اكتساب مهارة خلال مدة محددة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box reveal-left">
+                <div class="info-icon">🌟</div>
+                <div>
+                    <h3>ابنِ شخصيتك المالية</h3>
+                    <p>
+                        الالتزام بالوعود، سداد الديون، تحمل المسؤولية،
+                        التخطيط للمستقبل، ومساعدة الآخرين ضمن قدرتك،
+                        كلها عادات تدعم الاستقرار والثقة بالنفس.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quote reveal-scale">
+                <p>كلما أصبحت أكثر قيمة في عملك، زادت قدرتك على خلق دخل أكبر.</p>
+                <small>تطوير الذات والمهارات</small>
+            </div>
+
+            <div class="action reveal">
+                <div class="action-title">🎯 التطبيق العملي</div>
+                <p>
+                    اختر مهارة واحدة يمكن أن تزيد دخلك خلال السنة القادمة،
+                    ثم خصص لها وقتاً أسبوعياً ثابتاً.
+                    المعرفة التي لا تتحول إلى ممارسة تبقى مجرد ملف PDF آخر
+                    ينتظر مصيره المأساوي في مجلد التنزيلات.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- الملخص -->
+        <div class="section-divider reveal"><span>✦</span></div>
+
+        <section class="summary reveal-scale">
+
+            <h2>🏺 الطرق السبع في صفحة واحدة</h2>
+
+            <div class="summary-item">
+                <div class="summary-number">١</div>
+                <span>احتفظ بجزء من كل دخل تكسبه.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٢</div>
+                <span>سيطر على نفقاتك ولا تجعل الرغبات تتحول إلى ضروريات.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٣</div>
+                <span>استثمر مدخراتك بطريقة تفهمها وتناسب مخاطرها.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٤</div>
+                <span>احمِ رأس مالك وتجنب المخاطر التي لا تفهمها.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٥</div>
+                <span>خطط للسكن بطريقة تحقق الاستقرار ولا ترهق ميزانيتك.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٦</div>
+                <span>خطط لدخلك ومستقبلك قبل أن تحتاج إليه.</span>
+            </div>
+            <div class="summary-item">
+                <div class="summary-number">٧</div>
+                <span>طوّر مهاراتك وقدرتك على الكسب باستمرار.</span>
+            </div>
+
+        </section>
+
+
+        <!-- الخاتمة -->
+        <section class="ending reveal">
+
+            <div class="ending-symbol">🌿</div>
+
+            <h2>الثروة عادة قبل أن تكون رقماً</h2>
+
+            <p>
+                قد تختلف الأسواق، وتتغير الأسعار، وتتطور طرق الاستثمار،
+                لكن المبادئ الأساسية لإدارة المال تبقى قريبة من الإنسان:
+                أن تنفق أقل مما تكسب، وتدخر بانتظام، وتحمي ما تملك،
+                وتستثمر بعقل، وتطور قدرتك على الكسب.
+            </p>
+
+            <div class="ornament"><span>✦</span></div>
+
+            <p>
+                لا تبحث عن طريق سحري إلى الثراء.
+                ابنِ طريقاً تستطيع السير فيه لسنوات.
+            </p>
+
+        </section>
+
+
+        <footer class="footer">
+            <p>🏺 <span class="gold">دستور بابل المالي</span></p>
+            <p>ملخص تعليمي مستوحى من مبادئ كتاب «أغنى رجل في بابل»</p>
+            <p>جميع الأمثلة لأغراض تعليمية وليست توصية استثمارية.</p>
+        </footer>
+
+    </main>
+
 </div>
 
-    </div>
-</section>
-
-
-<main class="content">
-
-    <!-- المقدمة -->
-
-    <section class="preface">
-
-        <div class="chapter-label">
-            تمهيد
-        </div>
-
-        <h2>
-            حكاية قديمة عن مشكلة لا تزال حديثة
-        </h2>
-
-        <p>
-            منذ آلاف السنين كان أهل بابل يتعاملون مع المال كما نتعامل معه اليوم:
-            بعضهم يجمعه، وبعضهم ينفقه بسرعة، وبعضهم يحاول تنميته،
-            وقلة فقط تعرف كيف تجعل المال يعمل لصالحها.
-        </p>
-
-        <div class="ornament">
-            <span>✦</span>
-        </div>
-
-        <p>
-            الفكرة الأساسية في هذا الكتاب بسيطة:
-            <strong>الثروة لا تبدأ بحجم الدخل، بل بالطريقة التي يتعامل بها الإنسان مع ما يدخل إلى يده.</strong>
-        </p>
-
-    </section>
-
-
-    <div class="principle">
-
-        <div class="principle-title">
-            🏛️ المبدأ الذي يجمع الطرق السبع
-        </div>
-
-        <p>
-            لا تحاول أن تصبح ثرياً في ليلة واحدة.
-            ابدأ ببناء عادة مالية صحيحة، ثم كررها باستمرار.
-            المال الصغير الذي يُدار بحكمة يمكن أن يصبح أساساً لثروة كبيرة مع مرور السنوات.
-        </p>
-
-    </div>
-
-
-    <!-- الطريقة الأولى -->
-
-    <section class="rule" id="rule1">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">١</div>
-
-            <small>الطريقة الأولى</small>
-
-            <h2>
-                ابدأ في ملء محفظتك
-            </h2>
-
-            <p>
-                ادخر جزءاً من كل دخل قبل أن تبدأ في الإنفاق.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            أول خطوة نحو بناء الثروة ليست العثور على استثمار خارق،
-            ولا اكتشاف سر غامض يعرفه الأثرياء وحدهم.
-            البداية أبسط من ذلك بكثير:
-            <strong>احتفظ بجزء من المال الذي تكسبه.</strong>
-            اجعل لنفسك نصيباً ثابتاً من كل دخل يصل إليك،
-            ولا تسمح للمصاريف بأن تلتهمه بالكامل.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">🪙</div>
-
-            <div>
-                <h3>القاعدة الذهبية</h3>
-                <p>
-                    إذا دخل إلى يدك 10 ريالات، تعامل مع 9 ريالات على أنها دخلك الحقيقي،
-                    واجعل الريال العاشر ملكاً لثروتك المستقبلية.
-                </p>
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">💰</div>
-
-            <div>
-                <h3>لماذا 10٪؟</h3>
-                <p>
-                    لأن النسبة قابلة للتطبيق على أغلب الدخول إذا تم ضبط النفقات.
-                    والمقصود ليس الرقم نفسه بقدر ما هو بناء عادة:
-                    <strong>ادخر أولاً ثم أنفق.</strong>
-                </p>
-            </div>
-
-        </div>
-
-        <div class="quote">
-            <p>
-                لا تجعل كل ما تكسبه يمر من بين يديك دون أن يترك شيئاً لك.
-            </p>
-            <small>مبدأ الادخار</small>
-        </div>
-
-        <div class="action">
-
-            <div class="action-title">
-                🎯 التطبيق العملي
-            </div>
-
-            <p>
-                عند نزول راتبك، افصل مبلغ الادخار مباشرة في حساب مستقل.
-                لا تنتظر نهاية الشهر لترى ما تبقى، لأن البشر اكتشفوا منذ زمن طويل
-                أن «ما تبقى» غالباً يساوي صفراً بطريقة سحرية جداً.
-            </p>
-
-        </div>
-
-        <div class="example">
-
-            <div class="example-title">
-                📌 مثال بسيط
-            </div>
-
-            <p>
-                راتبك الشهري <strong>10,000 ريال</strong>.
-                ادخر 10٪ = <strong>1,000 ريال شهرياً</strong>.
-                خلال سنة يصبح لديك <strong>12,000 ريال</strong>
-                قبل احتساب أي عوائد استثمارية.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة الثانية -->
-
-    <section class="rule" id="rule2">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٢</div>
-
-            <small>الطريقة الثانية</small>
-
-            <h2>
-                تحكم في نفقاتك
-            </h2>
-
-            <p>
-                فرّق بين ما تحتاجه وما ترغب فيه.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            الادخار وحده لا يكفي إذا كانت النفقات تتوسع مع كل زيادة في الدخل.
-            كثير من الناس عندما يرتفع دخلهم لا يشعرون بأنهم أصبحوا أغنى،
-            لأن مستوى إنفاقهم يرتفع معه مباشرة.
-            لذلك تحتاج إلى ميزانية واضحة تحدد أين يذهب المال قبل أن يختفي.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">⚖️</div>
-
-            <div>
-                <h3>الاحتياجات ليست الرغبات</h3>
-
-                <p>
-                    الطعام والسكن والمواصلات الأساسية تختلف عن شراء الأشياء
-                    لمجرد أنك تريدها الآن.
-                    الرغبة ليست مشكلة بحد ذاتها، لكن المشكلة عندما تعامل كل رغبة
-                    وكأنها ضرورة لا يمكن تأجيلها.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">📝</div>
-
-            <div>
-
-                <h3>اكتب مصروفاتك</h3>
-
-                <p>
-                    سجل مصاريفك الشهرية، ثم صنفها إلى:
-                    ضرورية، مهمة، ترفيهية، ويمكن الاستغناء عنها.
-                    مجرد رؤية الأرقام مكتوبة قد تكون أكثر إقناعاً من مئة نصيحة مالية.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="quote">
-
-            <p>
-                الرغبات كثيرة، أما الدخل فله حدود.
-                الحكمة هي أن تجعل نفقاتك تخدم أهدافك، لا أن تجعل أهدافك تخدم نفقاتك.
-            </p>
-
-            <small>إدارة النفقات</small>
-
-        </div>
-
-        <div class="action">
-
-            <div class="action-title">
-                🎯 التطبيق العملي
-            </div>
-
-            <p>
-                ضع سقفاً لكل نوع من المصاريف.
-                وعندما تنتهي ميزانية الترفيه مثلاً، لا تسحب من مبلغ الادخار لتعويضها.
-                بهذه الطريقة يصبح الادخار جزءاً محمياً من نظامك المالي.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة الثالثة -->
-
-    <section class="rule" id="rule3">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٣</div>
-
-            <small>الطريقة الثالثة</small>
-
-            <h2>
-                أنمِ ثروتك
-            </h2>
-
-            <p>
-                اجعل مدخراتك تنتج دخلاً بدلاً من بقائها خاملة.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            بعد أن تبدأ في الادخار، تظهر الخطوة التالية:
-            ماذا ستفعل بهذا المال؟
-            المال الذي يجلس بلا هدف قد يحافظ على قيمته الاسمية،
-            لكنه لا يعمل من أجلك.
-            أما المال المستثمر بعقلانية فيمكن أن يولد عوائد،
-            وهذه العوائد يمكن أن تُعاد استثمارها لتبدأ دائرة النمو.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">📈</div>
-
-            <div>
-
-                <h3>اجعل المال يعمل</h3>
-
-                <p>
-                    ابحث عن الاستثمارات التي تفهمها وتتناسب مع قدرتك على تحمل المخاطر.
-                    الهدف ليس مطاردة أعلى ربح ممكن، بل بناء مصدر نمو مستمر ومدروس.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">🌱</div>
-
-            <div>
-
-                <h3>قوة التراكم</h3>
-
-                <p>
-                    عندما تحقق استثماراً عائداً، ثم تعيد استثمار العائد،
-                    يصبح لديك أصل يولد عائداً، والعائد نفسه يبدأ في توليد عوائد إضافية.
-                    هذه الفكرة هي جوهر النمو المركب عبر الزمن.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="quote">
-
-            <p>
-                اجعل كل ريال تدخره يبحث لك عن ريال آخر.
-            </p>
-
-            <small>قوة الاستثمار والتراكم</small>
-
-        </div>
-
-        <div class="action">
-
-            <div class="action-title">
-                🎯 التطبيق العملي
-            </div>
-
-            <p>
-                حدد هدفاً استثمارياً طويل الأجل، واختر أدوات استثمارية تفهم طبيعتها
-                ومخاطرها، ثم اجعل الإضافة المنتظمة عادة.
-                الاستمرارية أهم من محاولة معرفة أفضل يوم للشراء وأفضل يوم للبيع.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة الرابعة -->
-
-    <section class="rule" id="rule4">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٤</div>
-
-            <small>الطريقة الرابعة</small>
-
-            <h2>
-                حافظ على ثروتك من الضياع
-            </h2>
-
-            <p>
-                حماية رأس المال تسبق البحث عن الربح.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            جمع المال يحتاج إلى سنوات، لكن خسارته قد تحتاج إلى قرار واحد فقط.
-            لذلك لا يكفي أن تعرف كيف تستثمر، بل يجب أن تعرف كيف تحمي نفسك
-            من الاستثمارات التي لا تفهمها، والوعود المبالغ فيها،
-            والمخاطر التي لا تستطيع تحملها.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">🛡️</div>
-
-            <div>
-
-                <h3>افهم قبل أن تستثمر</h3>
-
-                <p>
-                    إذا لم تستطع شرح الاستثمار لشخص آخر بطريقة بسيطة،
-                    فهذه إشارة تستحق التوقف عندها ودراسة الموضوع أكثر.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">⚠️</div>
-
-            <div>
-
-                <h3>احذر الثراء السريع</h3>
-
-                <p>
-                    الوعود بعوائد ضخمة ومضمونة خلال وقت قصير تستحق الحذر الشديد.
-                    لا يوجد استثمار مرتفع العائد بلا مخاطر لمجرد أن أحدهم وضع له
-                    صورة فاخرة وشعاراً ذهبياً.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">🧠</div>
-
-            <div>
-
-                <h3>استشر أصحاب الخبرة</h3>
-
-                <p>
-                    اطلب رأي المختصين عندما تكون القرارات كبيرة أو معقدة،
-                    وقارن المعلومات ولا تعتمد على نصيحة شخص واحد فقط.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="quote">
-
-            <p>
-                لا تجعل الرغبة في الربح سبباً لخسارة ما جمعته بصعوبة.
-            </p>
-
-            <small>حماية رأس المال</small>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة الخامسة -->
-
-    <section class="rule" id="rule5">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٥</div>
-
-            <small>الطريقة الخامسة</small>
-
-            <h2>
-                اجعل منزلك استثماراً مريحاً
-            </h2>
-
-            <p>
-                فكر في السكن من زاوية مالية وعائلية معاً.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            ينظر الكتاب إلى امتلاك المسكن باعتباره وسيلة لتحقيق الاستقرار
-            وتقليل بعض تكاليف السكن على المدى الطويل.
-            لكن القرار العقاري ليس قاعدة تصلح للجميع،
-            فهو يعتمد على السعر والدخل والتمويل والموقع واحتياجات الأسرة.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">🏠</div>
-
-            <div>
-
-                <h3>الاستقرار</h3>
-
-                <p>
-                    امتلاك منزل مناسب قد يمنح الأسرة شعوراً بالاستقرار
-                    ويجعل التخطيط للمستقبل أكثر وضوحاً.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">📊</div>
-
-            <div>
-
-                <h3>احسب قبل القرار</h3>
-
-                <p>
-                    لا تنظر إلى القسط وحده.
-                    احسب الدفعة الأولى، تكلفة التمويل، الصيانة، الرسوم،
-                    التأمين، والمصاريف المرتبطة بالعقار قبل اتخاذ القرار.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="action">
-
-            <div class="action-title">
-                🎯 التطبيق العملي
-            </div>
-
-            <p>
-                قارن بين تكلفة الإيجار وتكلفة التملك على المدى الطويل،
-                ولا تجعل الرغبة في امتلاك منزل أكبر من قدرتك المالية.
-                البيت الجميل يصبح عبئاً إذا كان يبتلع ميزانيتك.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة السادسة -->
-
-    <section class="rule" id="rule6">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٦</div>
-
-            <small>الطريقة السادسة</small>
-
-            <h2>
-                اضمن دخلاً للمستقبل
-            </h2>
-
-            <p>
-                لا تجعل مستقبلك المالي يعتمد على قدرتك على العمل إلى الأبد.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            الإنسان يعمل ويكسب خلال سنوات طويلة، لكن الظروف تتغير.
-            قد يتغير العمل أو تقل القدرة على الكسب أو تظهر مسؤوليات جديدة.
-            لذلك فإن التخطيط المالي للمستقبل ليس ترفاً،
-            بل وسيلة لتقليل المفاجآت عندما تتغير ظروف الحياة.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">⏳</div>
-
-            <div>
-
-                <h3>ابدأ مبكراً</h3>
-
-                <p>
-                    الوقت من أقوى عناصر الاستثمار طويل الأجل.
-                    المبلغ الصغير المنتظم يمكن أن يتراكم عبر سنوات طويلة،
-                    بينما تأجيل الادخار يجعل تحقيق الهدف أكثر صعوبة.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">☂️</div>
-
-            <div>
-
-                <h3>ابنِ شبكة أمان</h3>
-
-                <p>
-                    وجود احتياطي مالي للطوارئ يقلل الحاجة إلى بيع الاستثمارات
-                    أو الاقتراض عند حدوث ظرف غير متوقع.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">🏛️</div>
-
-            <div>
-
-                <h3>فكر في المستقبل</h3>
-
-                <p>
-                    ضع أهدافاً للسنوات القادمة، مثل التقاعد،
-                    تعليم الأبناء، شراء منزل، أو بناء مصدر دخل إضافي.
-                    ثم حوّل هذه الأهداف إلى مبالغ ومدة زمنية واضحة.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="quote">
-
-            <p>
-                أفضل وقت للاستعداد للمستقبل هو قبل أن يصبح المستقبل حاضراً.
-            </p>
-
-            <small>التخطيط طويل الأجل</small>
-
-        </div>
-
-    </section>
-
-
-    <div class="section-divider">
-        <span>◆</span>
-    </div>
-
-
-    <!-- الطريقة السابعة -->
-
-    <section class="rule" id="rule7">
-
-        <div class="rule-heading">
-
-            <div class="rule-number">٧</div>
-
-            <small>الطريقة السابعة</small>
-
-            <h2>
-                زد قدرتك على الكسب
-            </h2>
-
-            <p>
-                الاستثمار في نفسك قد يكون من أكثر الاستثمارات تأثيراً على دخلك.
-            </p>
-
-        </div>
-
-        <p class="rule-intro dropcap">
-            لا يكفي أن تحاول تقليل المصاريف إلى الأبد.
-            هناك جانب آخر من المعادلة:
-            <strong>زيادة قدرتك على إنتاج الدخل.</strong>
-            تعلم مهارة جديدة، طور خبرتك، حسّن جودة عملك،
-            وابحث عن طرق تجعل قيمتك المهنية أكبر.
-        </p>
-
-        <div class="info-box">
-
-            <div class="info-icon">🎓</div>
-
-            <div>
-
-                <h3>طوّر معرفتك</h3>
-
-                <p>
-                    كل مهارة جديدة يمكن أن تفتح لك فرصة جديدة.
-                    تعلم باستمرار في المجال الذي تعمل فيه،
-                    ولا تجعل خبرتك تتوقف عند ما تعلمته قبل سنوات.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">🎯</div>
-
-            <div>
-
-                <h3>اجعل أهدافك محددة</h3>
-
-                <p>
-                    بدلاً من قول «أريد أن أصبح غنياً»،
-                    حدد هدفاً قابلاً للقياس:
-                    ادخار مبلغ معين، زيادة الدخل بنسبة معينة،
-                    أو اكتساب مهارة خلال مدة محددة.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-icon">🌟</div>
-
-            <div>
-
-                <h3>ابنِ شخصيتك المالية</h3>
-
-                <p>
-                    الالتزام بالوعود، سداد الديون، تحمل المسؤولية،
-                    التخطيط للمستقبل، ومساعدة الآخرين ضمن قدرتك،
-                    كلها عادات تدعم الاستقرار والثقة بالنفس.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="quote">
-
-            <p>
-                كلما أصبحت أكثر قيمة في عملك، زادت قدرتك على خلق دخل أكبر.
-            </p>
-
-            <small>تطوير الذات والمهارات</small>
-
-        </div>
-
-        <div class="action">
-
-            <div class="action-title">
-                🎯 التطبيق العملي
-            </div>
-
-            <p>
-                اختر مهارة واحدة يمكن أن تزيد دخلك خلال السنة القادمة،
-                ثم خصص لها وقتاً أسبوعياً ثابتاً.
-                المعرفة التي لا تتحول إلى ممارسة تبقى مجرد ملف PDF آخر
-                ينتظر مصيره المأساوي في مجلد التنزيلات.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- الملخص -->
-
-    <div class="section-divider">
-        <span>✦</span>
-    </div>
-
-    <section class="summary">
-
-        <h2>
-            🏺 الطرق السبع في صفحة واحدة
-        </h2>
-
-        <div class="summary-item">
-            <div class="summary-number">١</div>
-            <span>احتفظ بجزء من كل دخل تكسبه.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٢</div>
-            <span>سيطر على نفقاتك ولا تجعل الرغبات تتحول إلى ضروريات.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٣</div>
-            <span>استثمر مدخراتك بطريقة تفهمها وتناسب مخاطرها.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٤</div>
-            <span>احمِ رأس مالك وتجنب المخاطر التي لا تفهمها.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٥</div>
-            <span>خطط للسكن بطريقة تحقق الاستقرار ولا ترهق ميزانيتك.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٦</div>
-            <span>خطط لدخلك ومستقبلك قبل أن تحتاج إليه.</span>
-        </div>
-
-        <div class="summary-item">
-            <div class="summary-number">٧</div>
-            <span>طوّر مهاراتك وقدرتك على الكسب باستمرار.</span>
-        </div>
-
-    </section>
-
-
-    <!-- الخاتمة -->
-
-    <section class="ending">
-
-        <div class="ending-symbol">🌿</div>
-
-        <h2>
-            الثروة عادة قبل أن تكون رقماً
-        </h2>
-
-        <p>
-            قد تختلف الأسواق، وتتغير الأسعار، وتتطور طرق الاستثمار،
-            لكن المبادئ الأساسية لإدارة المال تبقى قريبة من الإنسان:
-            أن تنفق أقل مما تكسب، وتدخر بانتظام، وتحمي ما تملك،
-            وتستثمر بعقل، وتطور قدرتك على الكسب.
-        </p>
-
-        <div class="ornament">
-            <span>✦</span>
-        </div>
-
-        <p>
-            لا تبحث عن طريق سحري إلى الثراء.
-            ابنِ طريقاً تستطيع السير فيه لسنوات.
-        </p>
-
-    </section>
-
-
-    <footer class="footer">
-
-        <p>
-            🏺 <span class="gold">دستور بابل المالي</span>
-        </p>
-
-        <p>
-            ملخص تعليمي مستوحى من مبادئ كتاب «أغنى رجل في بابل»
-        </p>
-
-        <p>
-            جميع الأمثلة لأغراض تعليمية وليست توصية استثمارية.
-        </p>
-
-    </footer>
-
-</main>
-
-</div><a href="#top" class="back-top" aria-label="العودة للأعلى">
-    ↑
-</a></body>
+<a href="#top" class="back-top" id="backTop" aria-label="العودة للأعلى">↑</a>
+
+
+<script>
+(function () {
+    'use strict';
+
+    /* =====================================================
+       1) توليد الجزيئات العائمة
+       ===================================================== */
+    (function createParticles() {
+        var container = document.getElementById('particles');
+        if (!container) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (window.innerWidth < 600) return;
+
+        var symbols = ['✦', '❖', '◆', '✧', '•', '❈'];
+        var count = 18;
+
+        for (var i = 0; i < count; i++) {
+            var el = document.createElement('span');
+            el.className = 'particle';
+            el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (10 + Math.random() * 14) + 'px';
+            var duration = 16 + Math.random() * 20;
+            el.style.animationDuration = duration + 's';
+            el.style.animationDelay = (-Math.random() * duration) + 's';
+            container.appendChild(el);
+        }
+    })();
+
+    /* =====================================================
+       2) شريط تقدم القراءة
+       ===================================================== */
+    var progressBar = document.getElementById('progressBar');
+    function updateProgress() {
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+        progressBar.style.width = pct + '%';
+    }
+
+    /* =====================================================
+       3) إظهار / إخفاء زر العودة للأعلى
+       ===================================================== */
+    var backTop = document.getElementById('backTop');
+    function toggleBackTop() {
+        if (window.scrollY > 500) backTop.classList.add('show');
+        else backTop.classList.remove('show');
+    }
+
+    /* ربط أحداث التمرير مع rAF لأداء أفضل */
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+        if (!ticking) {
+            window.requestAnimationFrame(function () {
+                updateProgress();
+                toggleBackTop();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', function () {
+        updateProgress();
+    });
+
+    updateProgress();
+    toggleBackTop();
+
+    /* =====================================================
+       4) أنيميشن الظهور عند التمرير (Reveal on scroll)
+       ===================================================== */
+    var revealTargets = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -60px 0px'
+        });
+        revealTargets.forEach(function (el) { io.observe(el); });
+    } else {
+        revealTargets.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+
+    /* =====================================================
+       5) تأثير الإمالة ثلاثي الأبعاد (3D Tilt) لصناديق الفكرة
+       ===================================================== */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        && !window.matchMedia('(hover: none)').matches) {
+
+        var tiltCards = document.querySelectorAll('.info-box');
+
+        tiltCards.forEach(function (card) {
+            var raf = null;
+            var targetRX = 0, targetRY = 0;
+            var currentRX = 0, currentRY = 0;
+
+            function animate() {
+                currentRX += (targetRX - currentRX) * 0.15;
+                currentRY += (targetRY - currentRY) * 0.15;
+                card.style.transform =
+                    'translateY(-6px) rotateX(' + currentRX + 'deg) rotateY(' + currentRY + 'deg)';
+                if (Math.abs(targetRX - currentRX) > 0.05 ||
+                    Math.abs(targetRY - currentRY) > 0.05) {
+                    raf = requestAnimationFrame(animate);
+                } else {
+                    raf = null;
+                }
+            }
+
+            card.addEventListener('mousemove', function (e) {
+                var rect = card.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                var cx = rect.width / 2;
+                var cy = rect.height / 2;
+                var maxTilt = 6;
+                targetRY = -((x - cx) / cx) * maxTilt;
+                targetRX =  ((y - cy) / cy) * maxTilt;
+                if (!raf) raf = requestAnimationFrame(animate);
+            });
+
+            card.addEventListener('mouseleave', function () {
+                targetRX = 0;
+                targetRY = 0;
+                if (!raf) raf = requestAnimationFrame(animate);
+            });
+        });
+    }
+
+    /* =====================================================
+       6) تأثير Parallax خفيف على الغلاف
+       ===================================================== */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        && window.innerWidth > 600) {
+
+        var coverInner = document.querySelector('.cover-inner');
+        var glow1 = document.querySelector('.glow-1');
+        var glow2 = document.querySelector('.glow-2');
+        var cover = document.querySelector('.cover');
+        var parallaxTicking = false;
+
+        window.addEventListener('scroll', function () {
+            if (!parallaxTicking) {
+                requestAnimationFrame(function () {
+                    var y = window.scrollY;
+                    if (y < window.innerHeight) {
+                        if (coverInner) {
+                            coverInner.style.transform =
+                                'translateY(' + (y * 0.15) + 'px) scale(' + (1 - y * 0.0003) + ')';
+                            coverInner.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.85));
+                        }
+                        if (glow1) glow1.style.transform = 'translate(' + (-y * 0.08) + 'px,' + (y * 0.06) + 'px)';
+                        if (glow2) glow2.style.transform = 'translate(' + (y * 0.07) + 'px,' + (-y * 0.05) + 'px)';
+                    }
+                    parallaxTicking = false;
+                });
+                parallaxTicking = true;
+            }
+        }, { passive: true });
+    }
+
+    /* =====================================================
+       7) تفاعل عند النقر على أرقام الطرق السبع (تأثير موجة)
+       ===================================================== */
+    document.querySelectorAll('.rule-number').forEach(function (num) {
+        num.style.cursor = 'pointer';
+        num.addEventListener('click', function () {
+            num.animate([
+                { transform: 'rotateY(0deg) scale(1)' },
+                { transform: 'rotateY(180deg) scale(1.15)' },
+                { transform: 'rotateY(360deg) scale(1)' }
+            ], { duration: 800, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        });
+    });
+
+})();
+</script>
+
+</body>
 </html>
