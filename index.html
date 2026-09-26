@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دستور بابل المالي | الطرق السبع للتغلب على المحافظ الخاوية</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#FBF7EF;
+  --paper-2:#F5EEE1;
+  --paper-3:#FFFDF8;
+  --ink:#2A2622;
+  --ink-soft:#5C544A;
+  --green:#1F3A31;
+  --green-2:#2C4F43;
+  --gold:#C5A059;
+  --gold-soft:#E3CFA3;
+  --gold-ink:#96762F;
+  --line:#E4DAC6;
+}
+
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  font-family:'Cairo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background-color:#E5DED0;
+  background-image:
+     radial-gradient(circle at 15% 5%, #F1EBDD 0%, transparent 55%),
+     radial-gradient(circle at 85% 95%, #EFE6D6 0%, transparent 55%),
+     radial-gradient(circle at 50% 50%, #E9E2D4 0%, #DCD3C1 100%);
+  color:var(--ink);
+  line-height:2;
+  min-height:100vh;
+  padding:34px 14px 70px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============ شريط التقدم ============ */
+.progress{
+  position:fixed; top:0; right:0; height:4px; width:0;
+  background:linear-gradient(to left, #B98F3E, var(--gold), var(--gold-soft));
+  z-index:999;
+  border-radius:0 0 4px 4px;
+  box-shadow:0 0 10px rgba(197,160,89,.6);
+}
+
+/* ============ زر الطباعة العائم ============ */
+.print-btn{
+  position:fixed;
+  bottom:26px;
+  left:26px;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:13px 20px;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  font-family:'Cairo', sans-serif;
+  font-size:14.5px;
+  font-weight:700;
+  color:#F7EDD6;
+  background:linear-gradient(140deg, #33574A, #1D3931);
+  border:1.5px solid var(--gold);
+  box-shadow:
+      0 10px 26px -12px rgba(20,45,38,.9),
+      0 0 0 4px rgba(197,160,89,.15);
+  transition:transform .3s ease, box-shadow .3s ease, background .3s ease;
+}
+.print-btn:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:
+      0 16px 34px -14px rgba(20,45,38,.95),
+      0 0 0 5px rgba(197,160,89,.25);
+}
+.print-btn:active{ transform:translateY(-1px) scale(.99); }
+.print-btn .ico{
+  font-size:18px;
+  line-height:1;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));
+}
+.print-btn .txt{ letter-spacing:.4px; }
+
+@media (max-width:640px){
+  .print-btn{
+    bottom:16px; left:16px;
+    padding:11px 16px;
+    font-size:13px;
+  }
+  .print-btn .txt{ display:none; }
+  .print-btn .ico{ font-size:22px; }
+}
+
+/* ============ جسم الكتاب ============ */
+.book{
+  max-width:880px;
+  margin:0 auto;
+  background:var(--paper);
+  border-radius:8px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+      0 1px 0 rgba(255,255,255,.9) inset,
+      0 0 0 1px rgba(120,100,60,.13),
+      0 26px 60px -24px rgba(50,38,16,.55),
+      0 6px 18px -8px rgba(50,38,16,.25);
+}
+.book::before{
+  content:'';
+  position:absolute; inset-block:0; right:0; width:16px;
+  background:linear-gradient(to left, rgba(90,70,30,.10), rgba(90,70,30,.02) 55%, transparent);
+  pointer-events:none; z-index:6;
+}
+.book::after{
+  content:'';
+  position:absolute; inset-block:0; left:0; width:6px;
+  background:repeating-linear-gradient(to bottom, rgba(150,130,90,.10) 0 1px, transparent 1px 4px);
+  pointer-events:none; z-index:6; opacity:.5;
+}
+
+/* ============ الغلاف ============ */
+.cover{
+  position:relative;
+  padding:64px 30px 58px;
+  text-align:center;
+  color:#F4E9D0;
+  background:
+     radial-gradient(circle at 50% 0%, #3A6152 0%, #23453A 42%, #17302A 78%, #122520 100%);
+  overflow:hidden;
+}
+.cover::before{
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+     radial-gradient(circle at 12% 20%, rgba(197,160,89,.16) 0 1.5px, transparent 2px),
+     radial-gradient(circle at 78% 68%, rgba(197,160,89,.13) 0 1.5px, transparent 2px),
+     radial-gradient(circle at 45% 88%, rgba(197,160,89,.12) 0 1.5px, transparent 2px),
+     radial-gradient(circle at 88% 18%, rgba(197,160,89,.12) 0 1.5px, transparent 2px);
+  background-size:180px 180px;
+  pointer-events:none;
+}
+.cover-inner{
+  position:relative;
+  border:1px solid rgba(197,160,89,.55);
+  border-radius:3px;
+  padding:42px 22px 38px;
+  max-width:640px;
+  margin:0 auto;
+  box-shadow:0 0 0 1px rgba(197,160,89,.16) inset, 0 0 0 7px rgba(197,160,89,.07);
+}
+.cover-inner span.corner{
+  position:absolute;
+  color:var(--gold);
+  font-size:13px;
+  line-height:1;
+  opacity:.85;
+}
+.corner.tr{ top:9px; right:11px; }
+.corner.tl{ top:9px; left:11px; }
+.corner.br{ bottom:9px; right:11px; }
+.corner.bl{ bottom:9px; left:11px; }
+
+.cover-kicker{
+  font-size:13.5px;
+  letter-spacing:2px;
+  color:var(--gold-soft);
+  margin-bottom:14px;
+  font-weight:400;
+}
+.cover h1{
+  font-family:'Amiri', serif;
+  font-weight:700;
+  font-size:clamp(32px, 7vw, 52px);
+  line-height:1.35;
+  color:#F8EFD9;
+  text-shadow:0 3px 14px rgba(0,0,0,.45);
+  letter-spacing:.5px;
+}
+.cover-sub{
+  font-family:'Amiri', serif;
+  font-size:clamp(17px, 3.4vw, 22px);
+  color:var(--gold-soft);
+  line-height:1.7;
+}
+.cover-note{
+  margin-top:22px;
+  font-size:13.5px;
+  color:rgba(244,233,208,.62);
+  letter-spacing:.3px;
+}
+
+/* ============ توقيع المؤلف على الغلاف ============ */
+.author-cover{
+  margin-top:30px;
+  padding-top:22px;
+  position:relative;
+}
+.author-cover::before{
+  content:'❖ ✦ ❖';
+  display:block;
+  color:rgba(197,160,89,.55);
+  font-size:11px;
+  letter-spacing:14px;
+  margin-bottom:14px;
+  opacity:.9;
+}
+.author-cover .by-line{
+  font-family:'Amiri', serif;
+  font-size:14px;
+  color:rgba(227,207,163,.75);
+  font-style:italic;
+  margin-bottom:4px;
+  letter-spacing:1px;
+}
+.author-cover .author-name{
+  font-family:'Aref Ruqaa', 'Amiri', serif;
+  font-size:clamp(28px, 5.5vw, 38px);
+  font-weight:700;
+  color:#F4E4BC;
+  line-height:1.4;
+  letter-spacing:.5px;
+  background:linear-gradient(180deg, #F8EFD9 0%, #E3CFA3 55%, #C5A059 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  position:relative;
+  display:inline-block;
+  padding:0 8px;
+}
+.author-cover .author-name::before,
+.author-cover .author-name::after{
+  content:'﴾';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--gold);
+  font-size:26px;
+  -webkit-text-fill-color:var(--gold);
+  opacity:.7;
+  font-family:'Amiri', serif;
+}
+.author-cover .author-name::before{ right:-24px; }
+.author-cover .author-name::after{ content:'﴿'; left:-24px; }
+.author-cover .author-role{
+  margin-top:8px;
+  font-family:'Cairo', sans-serif;
+  font-size:12px;
+  color:rgba(244,233,208,.5);
+  letter-spacing:3px;
+}
+
+/* ============ الفاصل المزخرف ============ */
+.rule{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin:20px 0;
+  color:var(--gold);
+  font-size:13px;
+  line-height:1;
+}
+.rule::before,
+.rule::after{
+  content:'';
+  height:1px;
+  width:min(110px, 20vw);
+}
+.rule::before{ background:linear-gradient(to left, transparent, var(--gold)); }
+.rule::after { background:linear-gradient(to right, transparent, var(--gold)); }
+.cover .rule{ color:var(--gold-soft); margin:18px 0; }
+
+/* ============ المقدمة ============ */
+.intro{
+  background:linear-gradient(to left, #F6EFE1, #F1E8D7);
+  border-right:4px solid var(--gold);
+  padding:22px 26px;
+  margin:0;
+  color:var(--ink-soft);
+  font-size:15.5px;
+  line-height:2.05;
+  position:relative;
+}
+.intro strong{ color:var(--green); font-weight:700; }
+.intro .intro-orn{
+  display:block;
+  text-align:center;
+  color:var(--gold);
+  font-size:15px;
+  margin-top:12px;
+  letter-spacing:8px;
+  opacity:.7;
+}
+
+/* ============ الفهرس ============ */
+.toc{
+  padding:40px 44px 34px;
+  background:var(--paper-2);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.toc-title{
+  font-family:'Amiri', serif;
+  font-size:24px;
+  font-weight:700;
+  color:var(--green);
+  text-align:center;
+  margin-bottom:6px;
+}
+.toc-note{
+  text-align:center;
+  font-size:13px;
+  color:var(--gold-ink);
+  margin-bottom:22px;
+  letter-spacing:.5px;
+}
+.toc ol{ list-style:none; counter-reset:toc; }
+.toc li{ counter-increment:toc; }
+.toc a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:11px 14px;
+  border-radius:9px;
+  text-decoration:none;
+  color:var(--ink);
+  font-size:15.5px;
+  font-weight:600;
+  transition:background .25s ease, transform .25s ease, box-shadow .25s ease;
+  border:1px solid transparent;
+}
+.toc a:hover,
+.toc a:focus-visible{
+  background:#FFFDF7;
+  border-color:var(--line);
+  transform:translateX(-5px);
+  box-shadow:0 4px 14px -8px rgba(80,60,20,.5);
+  outline:none;
+}
+.toc .num{
+  flex-shrink:0;
+  width:30px; height:30px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-family:'Amiri', serif;
+  font-size:15px;
+  font-weight:700;
+  color:var(--green);
+  background:#EFE4CC;
+  border:1px solid var(--gold-soft);
+}
+.toc .dots{
+  flex:1;
+  border-bottom:1px dotted #CBBC9B;
+  transform:translateY(-5px);
+  min-width:14px;
+}
+.toc .tag{
+  font-size:12.5px;
+  font-weight:400;
+  color:var(--gold-ink);
+  flex-shrink:0;
+}
+
+/* ============ الفصول ============ */
+.chapter{
+  padding:52px 46px 46px;
+  position:relative;
+}
+body.js .chapter{
+  opacity:0;
+  transform:translateY(26px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+body.js .chapter.is-visible{
+  opacity:1;
+  transform:none;
+}
+
+.chapter-head{
+  text-align:center;
+  margin-bottom:30px;
+}
+.chapter-num{
+  width:66px; height:66px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-family:'Amiri', serif;
+  font-size:27px;
+  font-weight:700;
+  color:#F7EDD6;
+  background:linear-gradient(140deg, #33574A, #1D3931);
+  border:2px solid var(--gold);
+  box-shadow:
+      0 0 0 5px var(--paper),
+      0 0 0 6px rgba(197,160,89,.35),
+      0 10px 22px -12px rgba(30,55,45,.8);
+}
+.chapter h2{
+  font-family:'Amiri', serif;
+  font-size:clamp(23px, 4.4vw, 31px);
+  font-weight:700;
+  color:var(--green);
+  line-height:1.5;
+}
+.chapter-sub{
+  font-size:14.5px;
+  color:var(--gold-ink);
+  margin-top:6px;
+  letter-spacing:.3px;
+}
+.chapter-head .rule{ margin:16px 0 0; }
+
+/* ============ العناصر ============ */
+.item{
+  display:flex;
+  gap:15px;
+  align-items:flex-start;
+  background:linear-gradient(to left, var(--paper-3), #FBF5E9);
+  border:1px solid var(--line);
+  border-right:3px solid var(--gold);
+  border-radius:11px;
+  padding:17px 18px;
+  margin-bottom:14px;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.item:hover{
+  transform:translateX(-4px);
+  box-shadow:0 10px 24px -16px rgba(80,60,20,.75);
+  border-right-color:#B98F3E;
+}
+.item-icon{
+  flex-shrink:0;
+  width:44px; height:44px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-size:21px;
+  line-height:1;
+  background:radial-gradient(circle at 35% 30%, #FBF3E1, #EFE2C7);
+  border:1px solid #E3D3B0;
+  box-shadow:0 2px 6px -3px rgba(120,95,40,.4);
+}
+.item-content{ flex:1; min-width:0; }
+.item-title{
+  display:block;
+  font-weight:700;
+  font-size:15.5px;
+  color:var(--green);
+  margin-bottom:3px;
+}
+.item p{
+  font-size:15.5px;
+  line-height:2.05;
+  color:var(--ink-soft);
+}
+
+/* ============ خلاصة الطريقة ============ */
+.takeaway{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  margin-top:24px;
+  padding:18px 20px;
+  border-radius:11px;
+  background:linear-gradient(to left, #FBF4E4, #F7EDD8);
+  border:1px dashed #D9C48F;
+  position:relative;
+}
+.takeaway::before{
+  content:'';
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(197,160,89,.18);
+  border-radius:8px;
+  pointer-events:none;
+}
+.takeaway .tk-icon{
+  flex-shrink:0;
+  font-size:22px;
+  line-height:1.4;
+}
+.takeaway .tk-label{
+  display:block;
+  font-weight:700;
+  color:#8A6A21;
+  font-size:14.5px;
+  letter-spacing:.3px;
+  margin-bottom:3px;
+}
+.takeaway p{
+  font-size:15px;
+  color:#5B4A26;
+  line-height:1.95;
+}
+
+/* ============ الفاصل بين الفصول ============ */
+.sep{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  color:var(--gold);
+  font-size:14px;
+  padding:6px 0;
+  letter-spacing:6px;
+}
+.sep::before,
+.sep::after{
+  content:'';
+  height:1px;
+  flex:1;
+  max-width:220px;
+  background:linear-gradient(to left, transparent, #DCCBA4, transparent);
+}
+
+/* ============ الخلاصة النهائية ============ */
+.finale{
+  padding:46px 46px 52px;
+  background:linear-gradient(to bottom, #F5EEE1, #F0E7D6);
+  border-top:1px solid var(--line);
+}
+.finale h3{
+  font-family:'Amiri', serif;
+  font-size:25px;
+  font-weight:700;
+  color:var(--green);
+  text-align:center;
+  margin-bottom:8px;
+}
+.finale .lead{
+  text-align:center;
+  font-size:14.5px;
+  color:var(--gold-ink);
+  margin-bottom:26px;
+}
+.recap{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  gap:10px;
+}
+.recap li{
+  display:flex;
+  gap:11px;
+  align-items:center;
+  background:#FFFDF7;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:11px 14px;
+  font-size:14.8px;
+  color:var(--ink);
+  font-weight:600;
+}
+.recap .rnum{
+  flex-shrink:0;
+  width:26px; height:26px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-family:'Amiri', serif;
+  font-size:14px;
+  font-weight:700;
+  color:#F7EDD6;
+  background:linear-gradient(140deg, #33574A, #1D3931);
+  border:1px solid var(--gold);
+}
+
+/* ============ صندوق المؤلف قبل التذييل ============ */
+.author-box{
+  padding:36px 46px 30px;
+  background:linear-gradient(to bottom, #F0E7D6, #EBE1CD);
+  text-align:center;
+  border-top:1px solid var(--line);
+  position:relative;
+}
+.author-box::before{
+  content:'❖ ✦ ❖';
+  display:block;
+  color:var(--gold);
+  font-size:13px;
+  letter-spacing:14px;
+  margin-bottom:16px;
+  opacity:.75;
+}
+.author-box .ab-label{
+  font-family:'Cairo', sans-serif;
+  font-size:12px;
+  letter-spacing:4px;
+  color:var(--gold-ink);
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+.author-box .ab-name{
+  font-family:'Aref Ruqaa', 'Amiri', serif;
+  font-size:clamp(30px, 6vw, 44px);
+  font-weight:700;
+  line-height:1.4;
+  letter-spacing:.5px;
+  background:linear-gradient(180deg, #2C4F43 0%, #1F3A31 55%, #0F241E 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  display:inline-block;
+  position:relative;
+  padding:0 6px;
+  filter:drop-shadow(0 2px 3px rgba(30,55,45,.15));
+}
+.author-box .ab-name::before,
+.author-box .ab-name::after{
+  content:'﴾';
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--gold);
+  font-size:30px;
+  -webkit-text-fill-color:var(--gold);
+  opacity:.85;
+  font-family:'Amiri', serif;
+}
+.author-box .ab-name::before{ right:-28px; }
+.author-box .ab-name::after{ content:'﴿'; left:-28px; }
+.author-box .ab-role{
+  margin-top:10px;
+  font-family:'Amiri', serif;
+  font-style:italic;
+  font-size:14px;
+  color:var(--ink-soft);
+  letter-spacing:.5px;
+}
+.author-box .ab-seal{
+  margin-top:18px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 18px;
+  border:1px solid rgba(197,160,89,.6);
+  border-radius:50px;
+  font-family:'Reem Kufi', 'Cairo', sans-serif;
+  font-size:11.5px;
+  color:var(--gold-ink);
+  letter-spacing:2.5px;
+  background:rgba(255,253,247,.55);
+}
+.author-box .ab-seal span{ font-size:13px; }
+
+/* ============ التذييل ============ */
+.footer{
+  text-align:center;
+  padding:32px 24px 40px;
+  background:#1D3931;
+  color:#D9CBA8;
+  font-size:14px;
+  line-height:2;
+}
+.footer .foot-orn{
+  color:var(--gold);
+  font-size:15px;
+  letter-spacing:9px;
+  display:block;
+  margin-bottom:12px;
+  opacity:.85;
+}
+.footer strong{ color:#F0E1BE; font-weight:700; }
+.footer .foot-author{
+  margin-top:10px;
+  font-family:'Aref Ruqaa', 'Amiri', serif;
+  font-size:22px;
+  font-weight:700;
+  color:#F4E4BC;
+  letter-spacing:.5px;
+  display:block;
+  line-height:1.6;
+}
+.footer .foot-author::before,
+.footer .foot-author::after{
+  content:'❖';
+  color:var(--gold);
+  font-size:12px;
+  vertical-align:middle;
+  margin:0 12px;
+  opacity:.75;
+  font-family:'Amiri', serif;
+}
+
+/* ============ تجاوب ============ */
+@media (max-width:640px){
+  body{ padding:14px 8px 44px; line-height:1.9; }
+  .cover{ padding:42px 16px 38px; }
+  .cover-inner{ padding:28px 12px 26px; }
+  .corner{ display:none; }
+  .intro{ padding:18px 18px; font-size:15px; }
+  .toc{ padding:30px 18px 26px; }
+  .chapter{ padding:36px 20px 34px; }
+  .finale{ padding:36px 20px 40px; }
+  .author-box{ padding:28px 18px 24px; }
+  .chapter-num{ width:56px; height:56px; font-size:23px; }
+  .item{ padding:14px 14px; gap:11px; border-radius:10px; }
+  .item-icon{ width:37px; height:37px; font-size:18px; }
+  .item p, .item-title{ font-size:15px; }
+  .takeaway{ padding:15px 15px; }
+  .toc .tag{ display:none; }
+  .toc .dots{ min-width:8px; }
+  .author-cover .author-name::before,
+  .author-cover .author-name::after{ font-size:20px; }
+  .author-cover .author-name::before{ right:-16px; }
+  .author-cover .author-name::after{ left:-16px; }
+  .author-box .ab-name::before,
+  .author-box .ab-name::after{ font-size:22px; }
+  .author-box .ab-name::before{ right:-18px; }
+  .author-box .ab-name::after{ left:-18px; }
+}
+
+/* ============================================================
+   ===============  إعدادات الطباعة الاحترافية  ===============
+   ============================================================ */
+@page {
+  size: A4;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+@media print{
+
+  html, body{
+    background:#FFFFFF !important;
+    background-image:none !important;
+    padding:0 !important;
+    margin:0 !important;
+    color:#1A1A1A;
+    font-family:'Cairo', 'Segoe UI', serif;
+    font-size:11.5pt;
+    line-height:1.85;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .progress,
+  .print-btn,
+  .toc-note,
+  .sep{ display:none !important; }
+
+  .book{
+    max-width:none;
+    width:100%;
+    margin:0;
+    box-shadow:none !important;
+    border-radius:0;
+    background:#FFFFFF;
+    overflow:visible;
+  }
+  .book::before,
+  .book::after{ display:none !important; }
+
+  /* ============ الغلاف ============ */
+  .cover{
+    page-break-after: always;
+    break-after: page;
+    height: 297mm;
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+       radial-gradient(circle at 50% 0%, #3A6152 0%, #23453A 42%, #17302A 78%, #122520 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid;
+  }
+  .cover-inner{
+    max-width: 150mm;
+    padding: 26mm 14mm;
+    border: 1.5pt solid #C5A059 !important;
+    box-shadow:
+       0 0 0 1pt rgba(197,160,89,.55) inset,
+       0 0 0 6pt rgba(197,160,89,.18) !important;
+  }
+  .cover h1{
+    font-family:'Amiri', serif;
+    font-size: 40pt;
+    line-height:1.3;
+    color:#F8EFD9 !important;
+    text-shadow:none;
+  }
+  .cover-kicker{
+    font-size:11pt;
+    color:#E3CFA3 !important;
+  }
+  .cover-sub{
+    font-family:'Amiri', serif;
+    font-size:17pt;
+    color:#E3CFA3 !important;
+  }
+  .cover-note{
+    font-size:10.5pt;
+    color:#EFE1BF !important;
+  }
+  .cover .rule{ color:#E3CFA3 !important; }
+  .cover .rule::before{ background:linear-gradient(to left, transparent, #C5A059) !important; }
+  .cover .rule::after { background:linear-gradient(to right, transparent, #C5A059) !important; }
+  .corner{ color:#C5A059 !important; }
+
+  /* ============ توقيع المؤلف على الغلاف (طباعة) ============ */
+  .author-cover{
+    margin-top: 22pt;
+    padding-top: 16pt;
+  }
+  .author-cover::before{
+    color: #C5A059 !important;
+    font-size: 9pt;
+    letter-spacing: 12pt;
+    margin-bottom: 10pt;
+  }
+  .author-cover .by-line{
+    font-family:'Amiri', serif;
+    font-size: 11pt;
+    color: #E3CFA3 !important;
+    margin-bottom: 3pt;
+  }
+  .author-cover .author-name{
+    font-family:'Aref Ruqaa', 'Amiri', serif;
+    font-size: 26pt;
+    color: #F4E4BC !important;
+    -webkit-text-fill-color: #F4E4BC !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    filter: none;
+    display: inline-block;
+    padding: 0 22pt;
+    position: relative;
+  }
+  .author-cover .author-name::before,
+  .author-cover .author-name::after{
+    color: #C5A059 !important;
+    -webkit-text-fill-color: #C5A059 !important;
+    font-size: 20pt;
+    top: 50%;
+  }
+  .author-cover .author-name::before{ right: 0; }
+  .author-cover .author-name::after{ left: 0; }
+  .author-cover .author-role{
+    font-size: 9.5pt;
+    color: #D9CBA8 !important;
+    letter-spacing: 3pt;
+    margin-top: 5pt;
+  }
+
+  /* ============ المقدمة ============ */
+  .intro{
+    background:#F7F1E4 !important;
+    border-right:4pt solid #C5A059 !important;
+    padding:14pt 18pt;
+    font-size:11.5pt;
+    line-height:1.95;
+    margin: 0 0 8pt 0;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .intro strong{ color:#1F3A31 !important; }
+  .intro .intro-orn{ color:#C5A059 !important; letter-spacing:10pt; }
+
+  /* ============ الفهرس ============ */
+  .toc{
+    padding:16pt 4pt 12pt;
+    background:#FBF7EF !important;
+    border-top:0.5pt solid #E4DAC6;
+    border-bottom:0.5pt solid #E4DAC6;
+    page-break-after: always;
+    break-after: page;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .toc-title{
+    font-family:'Amiri', serif;
+    font-size:20pt;
+    color:#1F3A31 !important;
+    margin-bottom:12pt;
+  }
+  .toc li{
+    padding: 5pt 0;
+    border-bottom:0.4pt dotted #CBBC9B;
+  }
+  .toc li:last-child{ border-bottom:none; }
+  .toc a{
+    padding: 3pt 0;
+    font-size:12pt;
+    font-weight:600;
+    color:#2A2622 !important;
+    transform:none !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+  }
+  .toc .num{
+    width:20pt; height:20pt;
+    font-size:11pt;
+    color:#1F3A31 !important;
+    background:#EFE4CC !important;
+    border:0.5pt solid #C5A059 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .toc .dots{
+    border-bottom:0.5pt dotted #8A7B5B;
+    transform:translateY(-3pt);
+  }
+  .toc .tag{
+    color:#96762F !important;
+    font-size:10pt;
+  }
+
+  /* ============ الفصول ============ */
+  .chapter{
+    padding: 0;
+    page-break-before: always;
+    break-before: page;
+    page-break-inside: auto;
+    opacity:1 !important;
+    transform:none !important;
+  }
+  .chapter:first-of-type{ page-break-before: auto; break-before: auto; }
+
+  .chapter-head{
+    margin-bottom: 16pt;
+    padding-bottom: 10pt;
+    border-bottom: 1.5pt solid #C5A059;
+    page-break-after: avoid;
+    break-after: avoid;
+    text-align:center;
+  }
+  .chapter-num{
+    width: 42pt; height: 42pt;
+    font-family:'Amiri', serif;
+    font-size: 18pt;
+    color:#F7EDD6 !important;
+    background: #1F3A31 !important;
+    border: 1.5pt solid #C5A059 !important;
+    box-shadow:
+        0 0 0 3pt #FFFFFF,
+        0 0 0 4pt #C5A059 !important;
+    margin-bottom: 10pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .chapter h2{
+    font-family:'Amiri', serif;
+    font-size: 22pt;
+    font-weight:700;
+    color:#1F3A31 !important;
+    line-height:1.35;
+    margin-bottom: 3pt;
+  }
+  .chapter-sub{
+    font-size: 11.5pt;
+    color:#96762F !important;
+    font-style: italic;
+  }
+  .chapter-head .rule{ display:none !important; }
+
+  /* ============ العناصر ============ */
+  .item{
+    display: flex;
+    gap: 10pt;
+    align-items: flex-start;
+    background: #FBF7EF !important;
+    border: 0.5pt solid #E4DAC6 !important;
+    border-right: 3pt solid #C5A059 !important;
+    border-radius: 4pt;
+    padding: 9pt 11pt;
+    margin-bottom: 8pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    transform:none !important;
+    box-shadow:none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .item-icon{
+    width: 30pt; height: 30pt;
+    font-size: 15pt;
+    background: #F3E9D4 !important;
+    border: 0.5pt solid #E3D3B0 !important;
+    box-shadow:none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .item-title{
+    font-family:'Amiri', serif;
+    font-size: 13pt;
+    color:#1F3A31 !important;
+    margin-bottom: 2pt;
+  }
+  .item p{
+    font-size: 11.5pt;
+    line-height: 1.8;
+    color:#2A2622 !important;
+    text-align: justify;
+  }
+
+  /* ============ خلاصة الطريقة ============ */
+  .takeaway{
+    gap: 10pt;
+    margin-top: 12pt;
+    padding: 11pt 14pt;
+    border-radius: 4pt;
+    background: #F7EDD8 !important;
+    border: 1pt dashed #C5A059 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .takeaway::before{
+    inset: 3pt;
+    border: 0.4pt solid rgba(197,160,89,.3) !important;
+  }
+  .takeaway .tk-icon{ font-size: 16pt; }
+  .takeaway .tk-label{
+    font-family:'Amiri', serif;
+    font-size: 12pt;
+    color:#7A5A11 !important;
+    margin-bottom: 2pt;
+  }
+  .takeaway p{
+    font-size: 11.5pt;
+    line-height: 1.8;
+    color:#4B3A16 !important;
+    text-align: justify;
+  }
+
+  /* ============ الخلاصة النهائية ============ */
+  .finale{
+    padding: 0;
+    margin-top: 14pt;
+    page-break-before: always;
+    break-before: page;
+    page-break-inside: avoid;
+    background: transparent !important;
+    border-top: none !important;
+  }
+  .finale h3{
+    font-family:'Amiri', serif;
+    font-size: 22pt;
+    color:#1F3A31 !important;
+    padding-bottom: 10pt;
+    margin-bottom: 6pt;
+    border-bottom: 1.5pt solid #C5A059;
+  }
+  .finale .lead{
+    font-size: 11.5pt;
+    color:#96762F !important;
+    margin-bottom: 16pt;
+    font-style: italic;
+  }
+  .recap{
+    grid-template-columns: 1fr 1fr;
+    gap: 7pt;
+  }
+  .recap li{
+    background: #FBF7EF !important;
+    border: 0.5pt solid #E4DAC6 !important;
+    border-radius: 4pt;
+    padding: 8pt 11pt;
+    font-size: 11.5pt;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .recap .rnum{
+    width: 20pt; height: 20pt;
+    font-family:'Amiri', serif;
+    font-size: 11pt;
+    color:#F7EDD6 !important;
+    background: #1F3A31 !important;
+    border: 0.5pt solid #C5A059 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ============ صندوق المؤلف (طباعة) ============ */
+  .author-box{
+    padding: 20pt 10pt 14pt;
+    background: #F5EEE1 !important;
+    border-top: 1pt solid #E4DAC6;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .author-box::before{
+    color: #C5A059 !important;
+    font-size: 9pt;
+    letter-spacing: 12pt;
+    margin-bottom: 10pt;
+  }
+  .author-box .ab-label{
+    font-size: 9.5pt;
+    letter-spacing: 4pt;
+    color:#96762F !important;
+    margin-bottom: 8pt;
+  }
+  .author-box .ab-name{
+    font-family:'Aref Ruqaa', 'Amiri', serif;
+    font-size: 30pt;
+    color:#1F3A31 !important;
+    -webkit-text-fill-color: #1F3A31 !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    filter: none;
+    padding: 0 20pt;
+    display: inline-block;
+    position: relative;
+  }
+  .author-box .ab-name::before,
+  .author-box .ab-name::after{
+    color:#C5A059 !important;
+    -webkit-text-fill-color:#C5A059 !important;
+    font-size: 22pt;
+    top: 50%;
+  }
+  .author-box .ab-name::before{ right: 0; }
+  .author-box .ab-name::after{ left: 0; }
+  .author-box .ab-role{
+    font-size: 11pt;
+    color:#5C544A !important;
+    margin-top: 6pt;
+  }
+  .author-box .ab-seal{
+    margin-top: 12pt;
+    padding: 4pt 14pt;
+    border: 0.75pt solid #C5A059 !important;
+    color:#96762F !important;
+    font-size: 9.5pt;
+    letter-spacing: 2pt;
+    background: #FFFDF7 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ============ التذييل ============ */
+  .footer{
+    margin-top: 12pt;
+    padding: 14pt 10pt;
+    background: #1D3931 !important;
+    color:#D9CBA8 !important;
+    font-size: 11pt;
+    border-radius: 3pt;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .footer .foot-orn{ color:#C5A059 !important; letter-spacing:12pt; }
+  .footer strong{ color:#F0E1BE !important; font-family:'Amiri', serif; font-size:12pt; }
+  .footer .foot-author{
+    font-family:'Aref Ruqaa', 'Amiri', serif;
+    font-size: 18pt;
+    color:#F4E4BC !important;
+    margin-top: 8pt;
+    display: block;
+    line-height: 1.6;
+  }
+  .footer .foot-author::before,
+  .footer .foot-author::after{
+    color:#C5A059 !important;
+    font-size: 10pt;
+    margin: 0 10pt;
+  }
+
+  h1, h2, h3{ page-break-after: avoid; break-after: avoid; }
+  p, li{ orphans: 3; widows: 3; }
+  .item, .takeaway, .recap li{ page-break-inside: avoid; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- زر الطباعة -->
+<button class="print-btn" type="button" onclick="window.print()" aria-label="طباعة الكتاب">
+  <span class="ico">🖨️</span>
+  <span class="txt">طباعة الكتاب</span>
+</button>
+
+<div class="progress" aria-hidden="true"></div>
+
+<div class="book">
+
+  <!-- ============ الغلاف ============ -->
+  <header class="cover">
+    <div class="cover-inner">
+      <span class="corner tr">❖</span>
+      <span class="corner tl">❖</span>
+      <span class="corner br">❖</span>
+      <span class="corner bl">❖</span>
+
+      <p class="cover-kicker">ملخّص كلاسيكي مكثّف</p>
+      <h1>دستور بابل المالي</h1>
+      <div class="rule"><span>✦</span></div>
+      <p class="cover-sub">الطرق السبع للتغلّب على المحافظ الخاوية</p>
+      <p class="cover-note">مستوحى من كتاب «أغنى رجل في بابل»</p>
+
+  </header>
+
+  <!-- ============ المقدمة ============ -->
+  <section class="intro">
+    <strong>عزيزي القارئ:</strong>
+    هذا الكتيّب يختصر لك الحكمة المالية الخالدة التي قدّمها «أركاد» — أغنى رجل في بابل — لطلابه.
+    صيغت هذه القواعد بأسلوب رفيع ومحدّد لتكون مرجعك السريع والمبسّط لبناء الثروة، وتنميتها، وحمايتها.
+    <span class="intro-orn">❖ ❖ ❖</span>
+  </section>
+
+  <!-- ============ الفهرس ============ -->
+  <nav class="toc" aria-label="فهرس المحتويات">
+    <h3 class="toc-title">فهرس الطرق السبع</h3>
+    <p class="toc-note">اضغط على أي طريقة للانتقال إليها مباشرة</p>
+    <ol>
+      <li><a href="#ch1"><span class="num">١</span><span>ابدأ في ملء محفظتك</span><span class="dots"></span><span class="tag">ادّخر العُشر</span></a></li>
+      <li><a href="#ch2"><span class="num">٢</span><span>تحكّم في نفقاتك</span><span class="dots"></span><span class="tag">اضبط الميزانية</span></a></li>
+      <li><a href="#ch3"><span class="num">٣</span><span>اعمل على إنماء ثروتك</span><span class="dots"></span><span class="tag">استثمر أرباحك</span></a></li>
+      <li><a href="#ch4"><span class="num">٤</span><span>حافظ على ثروتك من الضياع</span><span class="dots"></span><span class="tag">احمِ رأس المال</span></a></li>
+      <li><a href="#ch5"><span class="num">٥</span><span>اجعل منزلك استثماراً مريحاً</span><span class="dots"></span><span class="tag">ملكيّتك الخاصة</span></a></li>
+      <li><a href="#ch6"><span class="num">٦</span><span>اضمن دخلاً ثابتاً في المستقبل</span><span class="dots"></span><span class="tag">تأمين الشيخوخة</span></a></li>
+      <li><a href="#ch7"><span class="num">٧</span><span>زد من قدرتك على الكسب</span><span class="dots"></span><span class="tag">طوّر ذاتك</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ الطريقة 1 ============ -->
+  <section class="chapter" id="ch1">
+    <div class="chapter-head">
+      <div class="chapter-num">١</div>
+      <h2>ابدأ في ملء محفظتك</h2>
+      <p class="chapter-sub">ادّخر العُشر من كل ما تكسب</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🪙</span>
+      <div class="item-content">
+        <span class="item-title">القاعدة الذهبية</span>
+        <p>من كل 10 عملات تدخل محفظتك، أخرج 9 عملات فقط لنفقاتك، واحتفظ بعملة واحدة دائماً داخل المحفظة.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">💡</span>
+      <div class="item-content">
+        <span class="item-title">التوسّع والمفهوم</span>
+        <p>إن ادّخار 10% من دخل إيراداتك لا ينقص من جودة معيشك شيئاً يُذكر؛ بل يولّد لديك شعوراً بالثقة والارتياح الذاتي، ويبدأ المال بفضل هذا القانون الأزلي بالتدفق إليك بسهولة أكبر.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🎯</span>
+      <div class="item-content">
+        <span class="item-title">الهدف العملي</span>
+        <p>المال الذي تنفقه يغذّي رغباتك العابرة، بينما المال الذي تتركه في المحفظة هو الذي يبني الممتلكات الكبيرة والأساس المتين لثروتك.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة الأولى</span>
+        <p>ادفع لنفسك أولاً: 10% قبل أي مصروف آخر، وستكتشف أن ما تبقّى كافٍ تماماً.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 2 ============ -->
+  <section class="chapter" id="ch2">
+    <div class="chapter-head">
+      <div class="chapter-num">٢</div>
+      <h2>تحكّم في نفقاتك</h2>
+      <p class="chapter-sub">اضبط ميزانيتك بحكمة</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">💳</span>
+      <div class="item-content">
+        <span class="item-title">الحقيقة المالية</span>
+        <p>النفقات الضرورية تتزايد وتتوسّع دائماً لتلتقي مع حجم دخلنا بالكامل، ما لم نعمل بعزم على مجابهتها والسيطرة عليها.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">⚖️</span>
+      <div class="item-content">
+        <span class="item-title">الفرق بين الرغبات والاحتياجات</span>
+        <p>لا تخلط بين احتياجاتك الأساسية ورغباتك الشخصية. إن للرغبات طبيعة نهمة كالأعشاب الضارة تنمو وتتعدّد كلما وجدت فرصة، بينما لا يمكن لأي رجل مهما بلغت ثروته إشباع جميع رغباته.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">📝</span>
+      <div class="item-content">
+        <span class="item-title">الخطة التنفيذية</span>
+        <p>اكتب كل ما ترغب في إنفاقه، ثم حدّد الضروريات والرغبات ذات الأولوية التي يمكن تغطيتها بـ 90% فقط من الدخل. واشطب الباقي واعتبره أمنيات لا مكان لها في ميزانيتك.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة الثانية</span>
+        <p>الميزانية ليست قيداً يخنقك، بل خطة تُنفق بها مالك على ما يهمّك حقاً.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 3 ============ -->
+  <section class="chapter" id="ch3">
+    <div class="chapter-head">
+      <div class="chapter-num">٣</div>
+      <h2>اعمل على إنماء ثروتك</h2>
+      <p class="chapter-sub">اجعل ذهبك يعمل لأجلك</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">📈</span>
+      <div class="item-content">
+        <span class="item-title">الفكرة الأساسية</span>
+        <p>المال الادّخاري القابع داخل المحفظة يدعو للرضا فقط، ولكنه لا ينتج شيئاً. الثروة الحقيقية لا تكمن في المال المحفوظ بل في «الدخل المتدفق».</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">👷</span>
+      <div class="item-content">
+        <span class="item-title">تشبيه العبيد الذهبيين</span>
+        <p>اعتبر كل قطعة ذهب تدّخرها كعَبْد خادم يعمل لحسابك، وأرباحها هي أبناؤه الذين يعملون لأجلك أيضاً، لتصبح النقود وأولاد النقود في خدمتك دائماً.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🌊</span>
+      <div class="item-content">
+        <span class="item-title">الهدف الاستثماري</span>
+        <p>تشغيل الأرباح عبر الفائدة المركّبة والاستثمارات الناجحة ليتحوّل المال إلى نهر ذهبي يصبّ في كيس نقودك باستمرار، سواء كنت تعمل أو تسافر.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة الثالثة</span>
+        <p>المال المدّخر بلا استثمار يبقى راكداً؛ فاجعل أرباحك تعمل بدلاً منك.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 4 ============ -->
+  <section class="chapter" id="ch4">
+    <div class="chapter-head">
+      <div class="chapter-num">٤</div>
+      <h2>حافظ على ثروتك من الضياع</h2>
+      <p class="chapter-sub">حماية رأس المال أولاً</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🛡️</span>
+      <div class="item-content">
+        <span class="item-title">القاعدة الأولى للاستثمار</span>
+        <p>حماية رأس المال هي الأولوية القصوى. عقوبة المخاطرة غير المدروسة هي الخسارة الكاملة.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">⚠️</span>
+      <div class="item-content">
+        <span class="item-title">الحذر من المغريات</span>
+        <p>لا تخدعك أوهام الثراء السريع، ولا الاستثمارات التي توصي بها أفكار غير مجرّبة أو أشخاص يفتقرون للخبرة في ذلك المجال.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🧠</span>
+      <div class="item-content">
+        <span class="item-title">استشارة الحكماء</span>
+        <p>قبل إيداع مالك في أي مجال، تشاور مع الأشخاص المتمرّسين والحكماء في التعامل المربح مع المال؛ فنصيحتهم الحكيمة تحمي ثروتك وتعادل قيمة الاستثمار نفسه.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة الرابعة</span>
+        <p>لا تخسر رأس مالك أبداً؛ فاستعادة ما فُقد أصعب بكثير من كسبه من جديد.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 5 ============ -->
+  <section class="chapter" id="ch5">
+    <div class="chapter-head">
+      <div class="chapter-num">٥</div>
+      <h2>اجعل منزلك استثماراً مريحاً</h2>
+      <p class="chapter-sub">ملكيّتك الخاصة</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🏠</span>
+      <div class="item-content">
+        <span class="item-title">الأثر النفسي والأسري</span>
+        <p>يمنح المنزل الخاص العائلة الاستقرار والبهجة، ويقلّل من تكاليف المعيشة اليومية، حيث يوفّر مساحة خضراء وراحة بال لا تتيحها المساكن المستأجرة.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🪴</span>
+      <div class="item-content">
+        <span class="item-title">الجدوى الاقتصادية</span>
+        <p>تحويل الأموال التي تدفعها كإيجار شهري دائم لملاك الأراضي إلى أقساط سداد لملكية عقارية استثمارية تصبح ملكاً لك ولأسرتك بمرور الوقت.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة الخامسة</span>
+        <p>بيتك المملوك استثمار يمنحك الاستقرار، ويوفّر عليك الإيجار مدى الحياة.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 6 ============ -->
+  <section class="chapter" id="ch6">
+    <div class="chapter-head">
+      <div class="chapter-num">٦</div>
+      <h2>اضمن دخلاً ثابتاً في المستقبل</h2>
+      <p class="chapter-sub">تأمين الشيخوخة</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">⏳</span>
+      <div class="item-content">
+        <span class="item-title">حتمية التقدم في السن</span>
+        <p>تقدّم العمر أمر لا مفرّ منه، ويأتي وقت يقلّ فيه حافزك وقدرتك على العمل والكسب.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">☂️</span>
+      <div class="item-content">
+        <span class="item-title">التخطيط المستقبلي</span>
+        <p>ينبغي على كل إنسان حكيم الاستعداد المبكر وتوفير الاستثمارات المضمونة وتأمين الدخل الثابت لسنوات الشيخوخة، ولحماية العائلة من بعده.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🏛️</span>
+      <div class="item-content">
+        <span class="item-title">الوسيلة الفعّالة</span>
+        <p>دفع مبالغ منتظمة وصغيرة وتخصيصها للاستثمار طويل الأجل أو شراء العقارات لتنمو وتصنع ثروة كافية تُؤمّن بها حياتك المستقبلية.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة السادسة</span>
+        <p>خصّص اليوم جزءاً من دخلك ليحمي أيامك التي لن تستطيع فيها العمل.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true">❖ ❖ ❖</div>
+
+  <!-- ============ الطريقة 7 ============ -->
+  <section class="chapter" id="ch7">
+    <div class="chapter-head">
+      <div class="chapter-num">٧</div>
+      <h2>زد من قدرتك على الكسب</h2>
+      <p class="chapter-sub">تطوير الذات والمهارات</p>
+      <div class="rule"><span>✦</span></div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🎯</span>
+      <div class="item-content">
+        <span class="item-title">الرغبة المحددة والواقعية</span>
+        <p>الرغبات العامة مجرد أمنيات واهنة، أما الرغبة الصريحة والمحددة (مثل كسب مبلغ محدد) فهي التي تدفع صاحبها للمثابرة والإنجاز.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🎓</span>
+      <div class="item-content">
+        <span class="item-title">إتقان الحرفة والمعرفة</span>
+        <p>كلما زادت معرفتك وتدرّبت على أساليب عملك بتركيز واهتمام أعمق، زادت كفاءتك وقدرتك على كسب أجور ومكافآت أعلى دون الحاجة للمطالبة بها.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-icon">🌟</span>
+      <div class="item-content">
+        <span class="item-title">احترام الذات والواجبات</span>
+        <p>سداد الديون، العناية بالأهل، كتابة الوصية، ومساعدة المحتاجين بأعمال عطوفة؛ كل ذلك يبني شخصيتك ويزيد من ثقتك بنفسك لتصل إلى أهدافك المالية بثبات.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="tk-icon">💎</span>
+      <div>
+        <span class="tk-label">خلاصة الطريقة السابعة</span>
+        <p>استثمر في نفسك أولاً؛ فالمعرفة والمهارة أعلى عائداً من أي أصل آخر.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ الخلاصة النهائية ============ -->
+  <section class="finale">
+    <h3>دستور بابل في سبعة أسطر</h3>
+    <p class="lead">احفظها، وطبّقها بالترتيب، وستتغيّر محفظتك إلى الأبد</p>
+    <ul class="recap">
+      <li><span class="rnum">١</span><span>ادفع لنفسك أولاً: 10% من كل دخل.</span></li>
+      <li><span class="rnum">٢</span><span>اضبط نفقاتك على 90% من دخلك.</span></li>
+      <li><span class="rnum">٣</span><span>شغّل أرباحك لتعمل بدلاً منك.</span></li>
+      <li><span class="rnum">٤</span><span>احمِ رأس مالك ولا تخسر أبداً.</span></li>
+      <li><span class="rnum">٥</span><span>امتلك بيتك بدل دفع الإيجار.</span></li>
+      <li><span class="rnum">٦</span><span>أمّن دخلك لسنوات الشيخوخة.</span></li>
+      <li><span class="rnum">٧</span><span>طوّر مهاراتك لتزيد كسبك.</span></li>
+    </ul>
+  </section>
+
+  <!-- ============ صندوق المؤلف ============ -->
+  <section class="author-box" aria-label="معلومات المُعدّ">
+    <p class="ab-label">إعداد وترتيب</p>
+    <h4 class="ab-name">حسين العرياني</h4>
+    <p class="ab-role">ملخّص الحِكَم الماليّة الخالدة</p>
+    <div class="ab-seal">
+      <span>❖</span>
+      <span>عملٌ متواضع</span>
+      <span>❖</span>
+    </div>
+  </section>
+
+  <!-- ============ التذييل ============ -->
+  <footer class="footer">
+    <span class="foot-orn">❖ ✦ ❖</span>
+    تم بحمد الله<br>
+    <strong>ملخص كتاب «أغنى رجل في بابل»</strong>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  document.body.classList.add('js');
+
+  var bar = document.querySelector('.progress');
+  function updateProgress() {
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - doc.clientHeight;
+    var pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  var chapters = document.querySelectorAll('.chapter');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    chapters.forEach(function (c) { io.observe(c); });
+  } else {
+    chapters.forEach(function (c) { c.classList.add('is-visible'); });
+  }
+})();
+</script>
+
+</body>
+</html>
